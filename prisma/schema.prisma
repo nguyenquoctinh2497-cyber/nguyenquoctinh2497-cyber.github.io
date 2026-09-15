@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model ShopInfo {
+  id         Int      @id @default(1)
+  shopName   String   @default("TĨNH COMPUTER")
+  hotline    String   @default("0989068821")
+  phone      String   @default("0989068821")
+  email      String   @default("nguyenquoctinh2497@gmail.com")
+  address    String   @default("K18 Phan Tứ, phường Ngũ Hành Sơn, Đà Nẵng")
+  bannerText String   @default("TĨNH COMPUTER - Chuyên mua bán, sửa chữa PC, Laptop, lắp đặt Camera, Wifi, thi công hệ thống điện nhẹ & xử lý sự cố tận nơi")
+  updatedAt  DateTime @updatedAt
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       String
+  category    String
+  image       String?
+  description String?
+  createdAt   DateTime @default(now())
+}
+
+model Order {
+  id          Int      @id @default(autoincrement())
+  customer    String
+  phone       String
+  address     String
+  totalPrice  String
+  status      String   @default("Chờ xử lý")
+  createdAt   DateTime @default(now())
+}
