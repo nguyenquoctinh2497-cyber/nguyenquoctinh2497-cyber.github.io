@@ -22,22 +22,33 @@ export default function ProductGrid() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    const defaultProducts: Product[] = [
+      { id: 1, name: "Laptop Gaming ASUS ROG Strix G16", price: "29.990.000đ", category: "laptop-moi", brand: "ASUS" },
+      { id: 2, name: "PC TĨNH Gaming AMD Ryzen 5 / RTX 3060", price: "15.490.000đ", category: "pc-may-tinh-ban", brand: "TĨNH PC" },
+      { id: 3, name: "Màn hình PC Dell UltraSharp 27 inch 4K", price: "11.290.000đ", category: "man-hinh-pc", brand: "Dell" },
+      { id: 4, name: "Camera Wifi Imou Ranger 2 4MP", price: "790.000đ", category: "camera-quan-sat", brand: "Imou" },
+    ];
+
     fetch("/api/products")
-      .then((res) => res.json())
+      .then(async (res) => {
+        // Kiểm tra loại nội dung trả về trước khi parse JSON
+        const contentType = res.headers.get("content-type");
+        if (res.ok && contentType && contentType.includes("application/json")) {
+          return res.json();
+        }
+        throw new Error("Response không phải JSON hợp lệ hoặc API bị lỗi");
+      })
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           setProducts(data);
         } else {
-          // Sản phẩm mặc định nếu DB chưa có
-          setProducts([
-            { id: 1, name: "Laptop Gaming ASUS ROG Strix G16", price: "29.990.000đ", category: "laptop-moi", brand: "ASUS" },
-            { id: 2, name: "PC TĨNH Gaming AMD Ryzen 5 / RTX 3060", price: "15.490.000đ", category: "pc-may-tinh-ban", brand: "TĨNH PC" },
-            { id: 3, name: "Màn hình PC Dell UltraSharp 27 inch 4K", price: "11.290.000đ", category: "man-hinh-pc", brand: "Dell" },
-            { id: 4, name: "Camera Wifi Imou Ranger 2 4MP", price: "790.000đ", category: "camera-quan-sat", brand: "Imou" },
-          ]);
+          setProducts(defaultProducts);
         }
       })
-      .catch((err) => console.error("Lỗi tải sản phẩm:", err));
+      .catch((err) => {
+        console.warn("API sản phẩm chưa sẵn sàng, hiển thị dữ liệu mặc định:", err.message);
+        setProducts(defaultProducts);
+      });
   }, []);
 
   const handleAddToCart = (p: Product, e: React.MouseEvent) => {
