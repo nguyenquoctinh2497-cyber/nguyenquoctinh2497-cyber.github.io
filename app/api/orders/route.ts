@@ -28,7 +28,7 @@ export async function POST(req: Request) {
         paymentMethod: body.paymentMethod, // 'VIETQR' hoặc 'COD'
         items: JSON.stringify(body.items),
         status: "PENDING",
-      },
+      } as any,
     });
     return NextResponse.json(newOrder);
   } catch (error) {
