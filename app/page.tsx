@@ -1,17 +1,22 @@
-import Header from "./components/Header";
-import HeroSection from "./components/HeroSection";
-import ProductGrid from "./components/ProductGrid";
-import Footer from "./components/Footer";
+import type { Metadata } from "next";
+import "./globals.css";
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: "Tĩnh Computer - Camera, PC, Laptop Giá Tốt Đà Nẵng",
+  description: "Chuyên cung cấp Laptop, PC Gaming, Camera quan sát và lắp đặt điện nhẹ uy tín tại Đà Nẵng.",
+  icons: {
+    icon: "/icon",
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <main className="min-h-screen bg-gray-100 flex flex-col justify-between">
-      <div>
-        <Header />
-        <HeroSection />
-        <ProductGrid />
-      </div>
-      <Footer />
-    </main>
+    <html lang="vi">
+      <body>{children}</body>
+    </html>
   );
 }
