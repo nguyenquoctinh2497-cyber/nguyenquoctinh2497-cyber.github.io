@@ -2,294 +2,134 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Logo from "./Logo";
-import { useShop } from "@/app/context/ShopContext";
-import { useCart } from "@/app/context/CartContext";
-import { CATEGORIES } from "@/app/config/categories";
-import {
-  Menu,
-  ChevronRight,
-  Cpu,
-  Phone,
-  Search,
-  ShoppingCart,
-  ShieldCheck,
-  Flame,
-} from "lucide-react";
+import { Search, ShoppingCart, Phone, Menu } from "lucide-react";
 
 export default function Header() {
-  const { shopInfo } = useShop();
-  const { totalCount } = useCart();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]?.slug || "laptop-moi");
-
-  // Dữ liệu danh mục con & thương hiệu chi tiết tương ứng với 10 danh mục chuẩn
-  const subCategoryData: Record<
-    string,
-    { brands: string[]; subItems: { title: string; items: string[] }[] }
-  > = {
-    "hang-cu-sale-50": {
-      brands: ["ASUS", "Dell", "HP", "Lenovo", "Acer"],
-      subItems: [
-        {
-          title: "Máy Cũ Thanh Lý",
-          items: ["Laptop Cũ Đẹp 99%", "PC Văn Phòng Cũ", "Màn Hình Cũ Giá Rẻ", "Linh Kiện Cũ Bảo Hành"],
-        },
-      ],
-    },
-    "laptop-moi": {
-      brands: ["ASUS", "MSI", "Dell", "HP", "Lenovo", "Acer", "Gigabyte"],
-      subItems: [
-        {
-          title: "Dòng Laptop",
-          items: ["Laptop Gaming", "Laptop Văn Phòng", "Laptop Đồ Họa", "Macbook Pro/Air"],
-        },
-        {
-          title: "Theo Cấu Hình",
-          items: ["Core i5 / Ryzen 5", "Core i7 / Ryzen 7", "RAM 16GB - SSD 512GB", "RTX 4050 / 4060"],
-        },
-      ],
-    },
-    "pc-may-tinh-ban": {
-      brands: ["TĨNH PC", "ROG Strix", "Gigabyte", "MSI"],
-      subItems: [
-        {
-          title: "PC Dựng Sẵn",
-          items: ["PC Gaming Giá Rẻ", "PC Đồ Họa - Render", "PC Văn Phòng - Công Ty", "PC Giả Lập / Server"],
-        },
-        {
-          title: "Linh Kiện Khuyên Dùng",
-          items: ["Nguồn 650W+", "VGA RTX 3060 / 4060", "Vỏ Case Bể Kính", "Tản Nhiệt Nước AIO"],
-        },
-      ],
-    },
-    "man-hinh-pc": {
-      brands: ["Dell", "ASUS", "LG", "Samsung", "AOC", "ViewSonic"],
-      subItems: [
-        {
-          title: "Kích Thước & Tần Số Quét",
-          items: ["Màn 24 inch 75Hz/100Hz", "Màn 27 inch 144Hz/180Hz", "Màn Đồ Họa 4K UltraSharp", "Màn Cong Gaming 32 inch"],
-        },
-      ],
-    },
-    "linh-kien-pc": {
-      brands: ["Intel", "AMD", "NVIDIA", "Kingston", "Corsair", "Gigabyte", "MSI"],
-      subItems: [
-        {
-          title: "Phần Cứng Máy Tính",
-          items: ["CPU Intel & Ryzen", "VGA - Card Màn Hình", "Mainboard - Bo Mạch Chủ", "RAM & Ổ Đĩa SSD NVMe"],
-        },
-      ],
-    },
-    "pc-phu-kien-may-tinh": {
-      brands: ["Logitech", "Razer", "Dareu", "Fuhlen"],
-      subItems: [
-        {
-          title: "Gear & Phụ Kiện",
-          items: ["Bàn Phím Cơ Gaming", "Chuột Không Dây / Gaming", "Tai Nghe Gaming 7.1", "Loa Máy Tính / Webcam"],
-        },
-      ],
-    },
-    "macbook-moi": {
-      brands: ["Apple"],
-      subItems: [
-        {
-          title: "Dòng Macbook",
-          items: ["MacBook Air M1 / M2 / M3", "MacBook Pro 14 / 16 inch", "Mac Mini / iMac", "Phụ Kiện Apple Chính Hãng"],
-        },
-      ],
-    },
-    "dien-thoai-tablet": {
-      brands: ["Apple", "Samsung", "Xiaomi", "OPPO"],
-      subItems: [
-        {
-          title: "Thiết Bị Di Động",
-          items: ["iPhone Mới / Likenew", "Samsung Galaxy Series", "Máy Tính Bảng iPad", "Máy Tính Bảng Android"],
-        },
-      ],
-    },
-    "camera-quan-sat": {
-      brands: ["Imou", "Ezviz", "Hikvision", "Dahua", "KBVision"],
-      subItems: [
-        {
-          title: "Gói Lắp Đặt Tận Nơi",
-          items: ["Camera Wifi Trong Nhà", "Camera Wifi Ngoài Trời 360", "Trọn Bộ Camera Đầu Ghi", "Thi Công Lắp Đặt Tận Nhà"],
-        },
-      ],
-    },
-    "may-in-thiet-bi-mang": {
-      brands: ["TP-Link", "Ruijie", "Tenda", "Canon", "HP", "Brother"],
-      subItems: [
-        {
-          title: "Thiết Bị Mạng & Điện Nhẹ",
-          items: ["Bộ Phát Wifi Mesh Full Nhà", "Bộ Kích Sóng Wifi", "Thi Công Dây Mạng / Tủ Mạng", "Sửa Sự Cố Mạng Tận Nơi"],
-        },
-      ],
-    },
-  };
-
-  const selectedCatObj = CATEGORIES.find((c) => c.slug === activeCategory);
-  const currentSub = subCategoryData[activeCategory] || {
-    brands: selectedCatObj?.brands || ["TĨNH COMPUTER"],
-    subItems: [
-      {
-        title: "Dịch Vụ Uy Tín",
-        items: ["Mua Bán Sỉ & Lẻ", "Sửa Chữa Tận Nơi", "Bảo Hành Chu Đáo", "Hỗ Trợ Kỹ Thuật 24/7"],
-      },
-    ],
-  };
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <header className="bg-red-600 text-white font-sans sticky top-0 z-50 shadow-md">
-      {/* Top Banner Text */}
-      <div className="bg-red-700 text-center text-xs py-1.5 px-4 font-semibold tracking-wide border-b border-red-800 flex justify-center items-center gap-2">
-        <Flame size={14} className="text-yellow-300 animate-pulse" />
-        <span className="truncate">{shopInfo.bannerText}</span>
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+      
+      {/* 1. BANNER THÔNG BÁO TRÊN CÙNG TO RỘNG CỰC NỔI BẬT */}
+      <div className="bg-gradient-to-r from-gray-100 via-amber-500 to-red-600 text-gray-900 overflow-hidden shadow-sm relative">
+        <div className="max-w-[1440px] mx-auto px-4 py-2.5 md:py-3.5 flex items-center justify-between gap-4">
+          
+          {/* Họa tiết trang trí góc trái */}
+          <div className="hidden lg:flex items-center gap-1.5 opacity-80 shrink-0">
+            <div className="w-4 h-4 border-2 border-amber-600 rotate-12"></div>
+            <div className="w-5 h-5 bg-amber-500 rotate-45 shadow"></div>
+            <div className="w-4 h-4 border-2 border-amber-600 -rotate-12"></div>
+            <div className="w-5 h-5 bg-red-600 rotate-12 shadow"></div>
+          </div>
+
+          {/* Nội dung Banner Thông Báo */}
+          <div className="flex-1 flex items-center justify-center gap-3 text-center uppercase tracking-tight">
+            <span className="text-gray-900 font-black text-sm md:text-lg lg:text-xl drop-shadow-sm">
+              GIẢM GIÁ TẤT CẢ CÁC DÒNG <span className="text-red-700 bg-amber-200 px-2 py-0.5 rounded-md font-black">PC & LAPTOP</span>
+            </span>
+
+            <div className="bg-gradient-to-r from-amber-500 to-red-600 text-white font-black text-xs md:text-base lg:text-lg px-4 py-1.5 rounded-r-full shadow-md flex items-center gap-2 transform -skew-x-12">
+              <span className="transform skew-x-12">🎁 VOUCHER & HÀNG NGÀN QUÀ TẶNG</span>
+            </div>
+          </div>
+
+          {/* Hotline góc phải */}
+          <div className="hidden xl:flex items-center gap-2 font-black text-xs text-white bg-black/20 px-3 py-1.5 rounded-full border border-white/20 shrink-0">
+            <span>☎ HOTLINE: 0989.068.821</span>
+          </div>
+
+        </div>
       </div>
 
-      {/* Main Header Row */}
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        {/* Component Logo Đã Nâng Cấp Chi Tiết */}
-        <Logo />
+      {/* 2. KHU VỰC LOGO CHỮ T & THANH TÌM KIẾM CHÍNH */}
+      <div className="max-w-[1440px] mx-auto px-3 py-3 flex items-center justify-between gap-4 md:gap-8">
+        
+        {/* LOGO CHỮ T CÁCH ĐIỆU CÓ KHÓA KÍCH THƯỚC AN TOÀN */}
+        <Link href="/" className="flex items-center gap-3 shrink-0 group">
+          <div className="w-11 h-11 md:w-12 md:h-12 bg-red-600 rounded-full flex items-center justify-center text-white shadow-md shrink-0">
+            <svg
+              viewBox="0 0 100 100"
+              width="28"
+              height="28"
+              className="w-7 h-7 md:w-8 md:h-8 fill-current shrink-0"
+            >
+              <path d="M 50,10 A 40,40 0 1,0 90,50 A 40,40 0 0,0 80,25" fill="none" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
+              <path d="M 32,32 L 68,32 M 50,32 L 50,72" stroke="currentColor" strokeWidth="12" strokeLinecap="round" />
+            </svg>
+          </div>
 
-        {/* Ô Tìm Kiếm */}
-        <div className="flex-1 max-w-xl relative">
-          <input
-            type="text"
-            placeholder="Nhập tên laptop, PC, camera, wifi... cần tìm"
-            className="w-full bg-white text-gray-800 text-xs sm:text-sm pl-4 pr-10 py-2.5 rounded-full outline-none focus:ring-2 focus:ring-yellow-400 shadow-inner"
-          />
-          <button className="absolute right-1 top-1/2 -translate-y-1/2 bg-red-600 hover:bg-red-700 text-white p-1.5 rounded-full transition cursor-pointer">
-            <Search size={16} />
-          </button>
+          <div className="flex flex-col">
+            <span className="text-xl md:text-2xl font-black text-gray-900 tracking-tighter uppercase leading-none group-hover:text-red-600 transition">
+              TINHCOMPUTER<span className="text-red-600">.VN</span>
+            </span>
+            <span className="text-[10px] font-bold text-gray-500 tracking-widest uppercase mt-0.5">
+              CAMERAS • PCS • LAPTOPS
+            </span>
+          </div>
+        </Link>
+
+        {/* Ô TÌM KIẾM SẢN PHẨM */}
+        <div className="flex-1 max-w-2xl hidden md:block">
+          <form className="relative flex items-center">
+            <input
+              type="text"
+              placeholder="Nhập tên laptop, PC, camera, wifi... cần tìm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-gray-100 border border-gray-300 rounded-full py-2.5 pl-5 pr-12 text-sm text-gray-900 focus:outline-none focus:border-red-600 focus:bg-white transition"
+            />
+            <button
+              type="submit"
+              className="absolute right-1.5 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full transition shadow"
+            >
+              <Search size={18} />
+            </button>
+          </form>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-4 text-xs font-semibold shrink-0">
-          <a href={`tel:${shopInfo.hotline}`} className="hidden md:flex items-center gap-1.5 hover:text-yellow-300 transition">
-            <Phone size={18} />
+        {/* GIỎ HÀNG & HOTLINE */}
+        <div className="flex items-center gap-4 text-xs font-bold text-gray-800">
+          <a
+            href="tel:0989068821"
+            className="hidden lg:flex items-center gap-2 bg-red-50 text-red-600 px-3.5 py-2 rounded-full border border-red-200 hover:bg-red-100 transition"
+          >
+            <Phone size={16} className="fill-current" />
             <div>
-              <span className="block text-[10px] text-red-200">Hotline tư vấn</span>
-              <span className="font-bold">{shopInfo.hotline}</span>
+              <span className="text-[10px] block font-normal text-gray-500">Hotline tư vấn</span>
+              <span className="font-extrabold text-sm leading-tight">0989.068.821</span>
             </div>
           </a>
 
-          <Link href="/cart" className="flex items-center gap-2 bg-red-700 hover:bg-red-800 px-3.5 py-2 rounded-xl transition shadow">
+          <Link
+            href="/cart"
+            className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2.5 rounded-full hover:bg-red-600 transition shadow"
+          >
             <ShoppingCart size={18} />
             <span className="hidden sm:inline">Giỏ hàng</span>
-            <span className="bg-yellow-400 text-red-900 px-1.5 py-0.5 rounded-full font-black text-[10px]">{totalCount}</span>
+            <span className="bg-red-600 text-white font-black text-[11px] px-2 py-0.5 rounded-full">
+              0
+            </span>
           </Link>
         </div>
       </div>
 
-      {/* Navigation Bar & Mega Menu */}
-      <div className="bg-red-700 border-t border-red-800">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between relative">
-          
-          {/* Nút Danh Mục Sản Phẩm (Hover thả xuống) */}
-          <div
-            className="relative"
-            onMouseEnter={() => setIsMenuOpen(true)}
-            onMouseLeave={() => setIsMenuOpen(false)}
-          >
-            <button className="bg-red-800 hover:bg-red-900 text-white font-bold px-4 py-2.5 flex items-center gap-2 rounded-t-lg transition text-xs uppercase tracking-wider cursor-pointer">
-              <Menu size={18} />
+      {/* 3. THANH MENU CHÍNH MÀU ĐỎ */}
+      <div className="bg-red-600 text-white font-bold text-xs uppercase shadow-inner">
+        <div className="max-w-[1440px] mx-auto px-4 flex items-center justify-between">
+          <div className="flex items-center gap-6 overflow-x-auto py-3 no-scrollbar">
+            <Link href="/" className="flex items-center gap-2 hover:text-amber-200 transition whitespace-nowrap">
+              <Menu size={16} />
               <span>DANH MỤC SẢN PHẨM</span>
-            </button>
-
-            {/* MEGA MENU DROPDOWN (Phong cách FPT Shop) */}
-            {isMenuOpen && (
-              <div className="absolute top-full left-0 w-[850px] bg-white text-gray-800 shadow-2xl rounded-b-2xl rounded-tr-2xl border border-gray-200 grid grid-cols-12 z-50 overflow-hidden font-sans">
-                
-                {/* Cột Trái: Danh Sách Danh Mục Chính */}
-                <div className="col-span-4 bg-gray-50 border-r border-gray-100 py-2">
-                  {CATEGORIES.map((cat) => (
-                    <div
-                      key={cat.slug}
-                      onMouseEnter={() => setActiveCategory(cat.slug)}
-                      className={`px-4 py-2.5 text-xs font-bold flex items-center justify-between cursor-pointer transition ${
-                        activeCategory === cat.slug
-                          ? "bg-white text-red-600 border-l-4 border-red-600 shadow-sm"
-                          : "text-gray-700 hover:bg-gray-100 hover:text-red-600"
-                      }`}
-                    >
-                      <Link href={`/category/${cat.slug}`} className="flex-1">
-                        {cat.name}
-                      </Link>
-                      <ChevronRight size={14} className={activeCategory === cat.slug ? "text-red-600" : "text-gray-400"} />
-                    </div>
-                  ))}
-                </div>
-
-                {/* Cột Phải: Nội Dung Chi Tiết Mega Menu */}
-                <div className="col-span-8 p-5 flex flex-col justify-between bg-white">
-                  <div>
-                    {/* Hãng Nổi Bật */}
-                    <div className="mb-4 pb-3 border-b border-gray-100">
-                      <span className="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider block mb-2">
-                        Thương hiệu nổi bật
-                      </span>
-                      <div className="flex flex-wrap gap-2">
-                        {currentSub.brands.map((brand) => (
-                          <span
-                            key={brand}
-                            className="bg-gray-100 hover:bg-red-50 hover:text-red-600 text-gray-700 font-bold text-xs px-3 py-1 rounded-md transition cursor-pointer border border-gray-200"
-                          >
-                            {brand}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Sub Category Items */}
-                    <div className="grid grid-cols-2 gap-6">
-                      {currentSub.subItems.map((group, idx) => (
-                        <div key={idx}>
-                          <h4 className="font-extrabold text-xs text-red-600 uppercase mb-2">
-                            {group.title}
-                          </h4>
-                          <ul className="space-y-1.5 text-xs text-gray-600 font-medium">
-                            {group.items.map((item) => (
-                              <li key={item}>
-                                <Link href="#" className="hover:text-red-600 hover:underline transition">
-                                  {item}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Footer nhỏ trong Mega Menu */}
-                  <div className="mt-6 pt-3 border-t border-gray-100 flex items-center justify-between text-xs bg-red-50 p-3 rounded-xl text-red-700 font-bold">
-                    <span className="flex items-center gap-1.5">
-                      <ShieldCheck size={16} /> Bảo hành tận nơi - Xử lý sự cố siêu tốc
-                    </span>
-                    <Link href="/contact" className="underline hover:text-red-900">
-                      Liên hệ ngay &rarr;
-                    </Link>
-                  </div>
-                </div>
-
-              </div>
-            )}
-          </div>
-
-          {/* Menus Phụ Ngang */}
-          <nav className="hidden md:flex items-center gap-6 text-xs font-bold uppercase tracking-wide py-2">
-            <Link href="/news" className="hover:text-yellow-300 transition">Tin Tức</Link>
-            <Link href="/build-pc" className="hover:text-yellow-300 transition flex items-center gap-1 text-yellow-300">
-              <Cpu size={14} /> Build PC
             </Link>
-            <Link href="/recruitment" className="hover:text-yellow-300 transition">Tuyển Dụng</Link>
-            <Link href="/about" className="hover:text-yellow-300 transition">Giới Thiệu</Link>
-            <Link href="/contact" className="hover:text-yellow-300 transition">Liên Hệ</Link>
-          </nav>
-
+            <Link href="/category/tin-tuc" className="hover:text-amber-200 transition whitespace-nowrap">TIN TỨC</Link>
+            <Link href="/category/build-pc" className="text-amber-300 hover:text-white transition whitespace-nowrap font-black">⚙ BUILD PC</Link>
+            <Link href="/category/tuyen-dung" className="hover:text-amber-200 transition whitespace-nowrap">TUYỂN DỤNG</Link>
+            <Link href="/category/gioi-thieu" className="hover:text-amber-200 transition whitespace-nowrap">GIỚI THIỆU</Link>
+            <Link href="/contact" className="hover:text-amber-200 transition whitespace-nowrap">LIÊN HỆ</Link>
+          </div>
         </div>
       </div>
+
     </header>
   );
 }

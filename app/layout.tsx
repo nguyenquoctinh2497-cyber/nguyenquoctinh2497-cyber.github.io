@@ -1,10 +1,9 @@
 import "./globals.css";
-import { ShopProvider } from "./context/ShopContext";
-import { CartProvider } from "./context/CartContext";
+import FloatingContact from "./components/FloatingContact";
 
 export const metadata = {
-  title: "Tĩnh Computer - Sửa chữa PC, Laptop & Camera Đà Nẵng",
-  description: "Chuyên mua bán, sửa chữa PC, Laptop, Camera, Wifi tận nơi",
+  title: "Tĩnh Computer - Camera, PC, Laptop Chính Hãng",
+  description: "Chuyên mua bán, sửa chữa PC, Laptop, lắp đặt Camera Wifi tận nơi",
 };
 
 export default function RootLayout({
@@ -14,10 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi">
-      <body>
-        <ShopProvider>
-          <CartProvider>{children}</CartProvider>
-        </ShopProvider>
+      <body className="antialiased bg-gray-100 text-gray-900">
+        {children}
+        <FloatingContact />
       </body>
     </html>
   );

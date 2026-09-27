@@ -10,7 +10,7 @@ interface Product {
   name: string;
   price: string;
   category: string;
-  brand: string;
+  brand?: string;
   image?: string;
   badge?: string;
 }
@@ -20,6 +20,7 @@ export default function ProductGrid() {
   const [products, setProducts] = useState<Product[]>([]);
   const [addedId, setAddedId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   useEffect(() => {
     const defaultProducts: Product[] = [
@@ -31,7 +32,6 @@ export default function ProductGrid() {
 
     fetch("/api/products")
       .then(async (res) => {
-        // Kiểm tra loại nội dung trả về trước khi parse JSON
         const contentType = res.headers.get("content-type");
         if (res.ok && contentType && contentType.includes("application/json")) {
           return res.json();
@@ -94,19 +94,24 @@ export default function ProductGrid() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {products.map((p) => {
           const isAdded = addedId === p.id;
+          const isHovered = hoveredId === p.id;
 
           return (
             <div
               key={p.id}
-              className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between group relative"
+              className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-200 flex flex-col justify-between group relative"
+              onMouseEnter={() => setHoveredId(p.id)}
+              onMouseLeave={() => setHoveredId(null)}
             >
               <Link href={`/product/${p.id}`} className="block">
-                <span className="text-[10px] font-extrabold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase mb-2 inline-block">
-                  {p.brand}
-                </span>
+                {p.brand && (
+                  <span className="text-[10px] font-extrabold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase mb-2 inline-block">
+                    {p.brand}
+                  </span>
+                )}
 
                 {/* Khung Ảnh Thực Tế */}
-                <div className="bg-gray-50 h-44 rounded-xl flex items-center justify-center mb-3 group-hover:scale-102 transition border border-gray-100 overflow-hidden">
+                <div className="bg-gray-50 h-44 rounded-xl flex items-center justify-center mb-3 group-hover:scale-102 transition border border-gray-100 overflow-hidden relative">
                   {p.image ? (
                     <img src={p.image} alt={p.name} className="w-full h-full object-contain p-2" />
                   ) : (
@@ -144,6 +149,40 @@ export default function ProductGrid() {
                   </>
                 )}
               </button>
+
+              {/* POPUP HOVER - HIỂN THỊ THÔNG TIN CHI TIẾT & KHUYẾN MÃI GIỐNG MẪU */}
+              {isHovered && (
+                <div className="absolute left-1/2 -translate-x-1/2 bottom-[102%] mb-2 w-72 bg-white border border-blue-500 rounded-xl shadow-2xl p-3 z-50 text-xs hidden lg:block animate-fade-in pointer-events-none">
+                  {/* Tiêu đề góc xanh */}
+                  <div className="bg-blue-600 text-white font-bold p-2 rounded-t-lg -mx-3 -mt-3 mb-2 text-[11px] line-clamp-2">
+                    {p.name}
+                  </div>
+
+                  {/* Khung Khuyến Mãi Màu Cam */}
+                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-2 mb-2">
+                    <div className="font-extrabold text-orange-600 text-[11px] mb-1 flex items-center gap-1">
+                      🎁 KHUYẾN MÃI - ƯU ĐÃI
+                    </div>
+                    <ul className="list-disc list-inside space-y-1 text-gray-700 text-[10px] font-medium">
+                      <li>Cam kết sản phẩm chính hãng 100%</li>
+                      <li>Bảo hành chính hãng <strong>24 tháng</strong></li>
+                      <li>Giao hàng & lắp đặt tận nơi</li>
+                      <li>Nhận hàng kiểm tra bù gấp 10 nếu giả</li>
+                      <li>Hotline/Zalo: <strong>0989.068.821</strong></li>
+                    </ul>
+                  </div>
+
+                  {/* Thông số kỹ thuật nhanh */}
+                  <div className="text-gray-600 text-[10px] space-y-1 border-t pt-2 font-medium">
+                    <p>• Độ phân giải siêu nét, góc nhìn rộng</p>
+                    <p>• Hỗ trợ quan sát ban đêm có màu</p>
+                    <p>• Đàm thoại 2 chiều, cảnh báo thông minh</p>
+                  </div>
+
+                  {/* Mũi tên chỉ xuống dưới card */}
+                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-8 border-t-blue-500"></div>
+                </div>
+              )}
             </div>
           );
         })}
