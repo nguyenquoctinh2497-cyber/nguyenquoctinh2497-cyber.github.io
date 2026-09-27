@@ -1,9 +1,28 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import FloatingContact from "./components/FloatingContact";
 
 export const metadata: Metadata = {
-  title: "Tĩnh Computer - Camera, PC, Laptop Giá Tốt Đà Nẵng",
-  description: "Chuyên cung cấp Laptop, PC Gaming, Camera quan sát và lắp đặt điện nhẹ uy tín tại Đà Nẵng.",
+  title: "Sửa Máy Tính Đà Nẵng & Lắp Đặt Camera Giá Rẻ - Tĩnh Computer",
+  description: "Tĩnh Computer chuyên sửa chữa máy tính, laptop, PC gaming, camera quan sát và thi công mạng điện nhẹ uy tín tận nơi tại Đà Nẵng. Hotline: 0989.068.821",
+  keywords: [
+    "sửa máy tính đà nẵng",
+    "lắp đặt camera đà nẵng",
+    "sửa laptop đà nẵng",
+    "sửa máy tính tận nhà đà nẵng",
+    "lắp camera gia đình đà nẵng",
+    "tĩnh computer",
+    "tinhcomputer.vn",
+  ],
+  authors: [{ name: "Tĩnh Computer" }],
+  openGraph: {
+    title: "Sửa Máy Tính Đà Nẵng & Lắp Đặt Camera Giá Rẻ - Tĩnh Computer",
+    description: "Dịch vụ sửa máy tính, PC, Laptop và lắp đặt camera an ninh uy tín tận nơi tại Đà Nẵng. Gọi ngay 0989.068.821.",
+    url: "https://tinhcomputer.vn",
+    siteName: "Tĩnh Computer",
+    locale: "vi_VN",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -13,7 +32,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi">
-      <body>{children}</body>
+      <body className="antialiased bg-gray-100 min-h-screen">
+        {children}
+        <FloatingContact />
+      </body>
     </html>
   );
 }
