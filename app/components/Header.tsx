@@ -3,18 +3,29 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Search, ShoppingCart, Phone, Menu } from "lucide-react";
+import { useCart } from "@/app/context/CartContext";
 
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
+  const { cart } = useCart();
+
+  // Tính tổng số lượng sản phẩm trong giỏ hàng
+  const totalCartCount = cart ? cart.reduce((total, item) => total + item.quantity, 0) : 0;
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      window.location.href = `/category/${encodeURIComponent(searchQuery.trim())}`;
+    }
+  };
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
       
-      {/* 1. BANNER THÔNG BÁO TRÊN CÙNG TO RỘNG CỰC NỔI BẬT */}
+      {/* 1. BANNER THÔNG BÁO TRÊN CÙNG */}
       <div className="bg-gradient-to-r from-gray-100 via-amber-500 to-red-600 text-gray-900 overflow-hidden shadow-sm relative">
         <div className="max-w-[1440px] mx-auto px-4 py-2.5 md:py-3.5 flex items-center justify-between gap-4">
           
-          {/* Họa tiết trang trí góc trái */}
           <div className="hidden lg:flex items-center gap-1.5 opacity-80 shrink-0">
             <div className="w-4 h-4 border-2 border-amber-600 rotate-12"></div>
             <div className="w-5 h-5 bg-amber-500 rotate-45 shadow"></div>
@@ -22,7 +33,6 @@ export default function Header() {
             <div className="w-5 h-5 bg-red-600 rotate-12 shadow"></div>
           </div>
 
-          {/* Nội dung Banner Thông Báo */}
           <div className="flex-1 flex items-center justify-center gap-3 text-center uppercase tracking-tight">
             <span className="text-gray-900 font-black text-sm md:text-lg lg:text-xl drop-shadow-sm">
               GIẢM GIÁ TẤT CẢ CÁC DÒNG <span className="text-red-700 bg-amber-200 px-2 py-0.5 rounded-md font-black">PC & LAPTOP</span>
@@ -33,7 +43,6 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Hotline góc phải */}
           <div className="hidden xl:flex items-center gap-2 font-black text-xs text-white bg-black/20 px-3 py-1.5 rounded-full border border-white/20 shrink-0">
             <span>☎ HOTLINE: 0989.068.821</span>
           </div>
@@ -41,10 +50,9 @@ export default function Header() {
         </div>
       </div>
 
-      {/* 2. KHU VỰC LOGO CHỮ T & THANH TÌM KIẾM CHÍNH */}
+      {/* 2. LOGO, Ô TÌM KIẾM & GIỎ HÀNG */}
       <div className="max-w-[1440px] mx-auto px-3 py-3 flex items-center justify-between gap-4 md:gap-8">
         
-        {/* LOGO CHỮ T CÁCH ĐIỆU CÓ KHÓA KÍCH THƯỚC AN TOÀN */}
         <Link href="/" className="flex items-center gap-3 shrink-0 group">
           <div className="w-11 h-11 md:w-12 md:h-12 bg-red-600 rounded-full flex items-center justify-center text-white shadow-md shrink-0">
             <svg
@@ -68,9 +76,9 @@ export default function Header() {
           </div>
         </Link>
 
-        {/* Ô TÌM KIẾM SẢN PHẨM */}
+        {/* Ô TÌM KIẾM */}
         <div className="flex-1 max-w-2xl hidden md:block">
-          <form className="relative flex items-center">
+          <form onSubmit={handleSearchSubmit} className="relative flex items-center">
             <input
               type="text"
               placeholder="Nhập tên laptop, PC, camera, wifi... cần tìm"
@@ -80,14 +88,14 @@ export default function Header() {
             />
             <button
               type="submit"
-              className="absolute right-1.5 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full transition shadow"
+              className="absolute right-1.5 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full transition shadow cursor-pointer"
             >
               <Search size={18} />
             </button>
           </form>
         </div>
 
-        {/* GIỎ HÀNG & HOTLINE */}
+        {/* HOTLINE & GIỎ HÀNG DỘNG */}
         <div className="flex items-center gap-4 text-xs font-bold text-gray-800">
           <a
             href="tel:0989068821"
@@ -107,13 +115,13 @@ export default function Header() {
             <ShoppingCart size={18} />
             <span className="hidden sm:inline">Giỏ hàng</span>
             <span className="bg-red-600 text-white font-black text-[11px] px-2 py-0.5 rounded-full">
-              0
+              {totalCartCount}
             </span>
           </Link>
         </div>
       </div>
 
-      {/* 3. THANH MENU CHÍNH MÀU ĐỎ */}
+      {/* 3. MENU ĐIỀU HƯỚNG CHÍNH */}
       <div className="bg-red-600 text-white font-bold text-xs uppercase shadow-inner">
         <div className="max-w-[1440px] mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center gap-6 overflow-x-auto py-3 no-scrollbar">
@@ -121,10 +129,10 @@ export default function Header() {
               <Menu size={16} />
               <span>DANH MỤC SẢN PHẨM</span>
             </Link>
-            <Link href="/category/tin-tuc" className="hover:text-amber-200 transition whitespace-nowrap">TIN TỨC</Link>
-            <Link href="/category/build-pc" className="text-amber-300 hover:text-white transition whitespace-nowrap font-black">⚙ BUILD PC</Link>
-            <Link href="/category/tuyen-dung" className="hover:text-amber-200 transition whitespace-nowrap">TUYỂN DỤNG</Link>
-            <Link href="/category/gioi-thieu" className="hover:text-amber-200 transition whitespace-nowrap">GIỚI THIỆU</Link>
+            <Link href="/news" className="hover:text-amber-200 transition whitespace-nowrap">TIN TỨC</Link>
+            <Link href="/build-pc" className="text-amber-300 hover:text-white transition whitespace-nowrap font-black">⚙ BUILD PC</Link>
+            <Link href="/recruitment" className="hover:text-amber-200 transition whitespace-nowrap">TUYỂN DỤNG</Link>
+            <Link href="/about" className="hover:text-amber-200 transition whitespace-nowrap">GIỚI THIỆU</Link>
             <Link href="/contact" className="hover:text-amber-200 transition whitespace-nowrap">LIÊN HỆ</Link>
           </div>
         </div>
