@@ -1,9 +1,9 @@
+import type { Metadata } from "next";
 import "./globals.css";
-import FloatingContact from "./components/FloatingContact";
 
-export const metadata = {
-  title: "Tĩnh Computer - Camera, PC, Laptop Chính Hãng",
-  description: "Chuyên mua bán, sửa chữa PC, Laptop, lắp đặt Camera Wifi tận nơi",
+export const metadata: Metadata = {
+  title: "Tĩnh Computer - Camera, PC, Laptop Giá Tốt Đà Nẵng",
+  description: "Chuyên cung cấp Laptop, PC Gaming, Camera quan sát và lắp đặt điện nhẹ uy tín tại Đà Nẵng.",
 };
 
 export default function RootLayout({
@@ -13,10 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi">
-      <body className="antialiased bg-gray-100 text-gray-900">
-        {children}
-        <FloatingContact />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
