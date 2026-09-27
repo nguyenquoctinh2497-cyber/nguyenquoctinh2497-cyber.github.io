@@ -9,20 +9,35 @@ interface Product {
   id: number;
   name: string;
   price: string;
-  category: string;
+  category?: string;
   brand?: string;
-  image?: string;
+  image?: string | null;
   badge?: string;
 }
 
-export default function ProductGrid() {
+// Bổ sung Props interface để tiếp nhận products từ trang danh mục (category/slug)
+interface ProductGridProps {
+  products?: Product[] | any[];
+}
+
+export default function ProductGrid({ products: initialProducts }: ProductGridProps) {
   const { addToCart } = useCart();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>(initialProducts || []);
   const [addedId, setAddedId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
+  // Nếu props thay đổi từ trang cha, cập nhật lại state products
   useEffect(() => {
+    if (initialProducts && initialProducts.length > 0) {
+      setProducts(initialProducts);
+    }
+  }, [initialProducts]);
+
+  useEffect(() => {
+    // Nếu trang cha đã truyền products vào thì không cần fetch API lại nữa
+    if (initialProducts && initialProducts.length > 0) return;
+
     const defaultProducts: Product[] = [
       { id: 1, name: "Laptop Gaming ASUS ROG Strix G16", price: "29.990.000đ", category: "laptop-moi", brand: "ASUS" },
       { id: 2, name: "PC TĨNH Gaming AMD Ryzen 5 / RTX 3060", price: "15.490.000đ", category: "pc-may-tinh-ban", brand: "TĨNH PC" },
@@ -49,7 +64,7 @@ export default function ProductGrid() {
         console.warn("API sản phẩm chưa sẵn sàng, hiển thị dữ liệu mặc định:", err.message);
         setProducts(defaultProducts);
       });
-  }, []);
+  }, [initialProducts]);
 
   const handleAddToCart = (p: Product, e: React.MouseEvent) => {
     e.preventDefault();
