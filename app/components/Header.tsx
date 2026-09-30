@@ -35,6 +35,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-md">
+      {/* Top Header */}
       <div className="bg-red-600 text-white text-xs py-1.5 px-4 flex justify-between items-center">
         <span className="truncate">🔥 ƯU ĐÃI RƯỚC ĐÈN - GIẢM GIÁ TẤT CẢ DÒNG PC & LAPTOP</span>
         <a href="tel:0989068821" className="font-bold hover:underline flex items-center gap-1 shrink-0">
@@ -42,6 +43,7 @@ export default function Header() {
         </a>
       </div>
 
+      {/* Main Header */}
       <div className="container mx-auto px-3 py-2.5 flex items-center justify-between gap-3">
         <Link href="/" className="flex flex-col leading-none">
           <span className="text-xl md:text-2xl font-black text-red-600 tracking-tight">
@@ -52,6 +54,7 @@ export default function Header() {
           </span>
         </Link>
 
+        {/* Search */}
         <div className="flex-1 max-w-md relative">
           <input
             type="text"
@@ -63,6 +66,7 @@ export default function Header() {
           </button>
         </div>
 
+        {/* Cart Icon */}
         <Link href="/cart" className="relative p-2 text-gray-700 hover:text-red-600 transition">
           <ShoppingCart className="w-6 h-6" />
           {totalItems > 0 && (
@@ -73,12 +77,14 @@ export default function Header() {
         </Link>
       </div>
 
+      {/* Nav Bar */}
       <nav className="bg-red-700 text-white relative">
         <div className="container mx-auto px-2 flex items-center justify-between">
           <div className="flex items-center overflow-x-auto whitespace-nowrap scrollbar-none">
+            {/* Nút bật/tắt đóng mở danh mục */}
             <button
-              onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-              className="flex items-center gap-2 bg-red-800 hover:bg-red-900 px-4 py-2.5 text-xs font-bold uppercase transition"
+              onClick={() => setIsCategoryOpen((prev) => !prev)}
+              className="flex items-center gap-2 bg-red-800 hover:bg-red-900 px-4 py-2.5 text-xs font-bold uppercase transition cursor-pointer select-none"
             >
               {isCategoryOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
               <span>DANH MỤC SẢN PHẨM</span>
@@ -99,29 +105,38 @@ export default function Header() {
           </div>
         </div>
 
+        {/* Dropdown Menu Danh mục (Hiện khi isCategoryOpen = true) */}
         {isCategoryOpen && (
-          <div className="absolute top-full left-0 w-full md:w-80 bg-white text-gray-800 shadow-2xl border-b border-r border-gray-200 z-50">
-            <ul className="divide-y divide-gray-100 text-sm">
-              {categories.map((cat, idx) => {
-                const IconComp = cat.icon;
-                return (
-                  <li key={idx}>
-                    <Link
-                      href={cat.href}
-                      className="flex items-center justify-between px-4 py-3 hover:bg-red-50 hover:text-red-600 transition font-medium text-xs md:text-sm"
-                      onClick={() => setIsCategoryOpen(false)}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <IconComp className="w-4 h-4 text-red-600 shrink-0" />
-                        <span>{cat.name}</span>
-                      </div>
-                      <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+          <>
+            {/* Màn chắn mờ phía sau để bấm ra ngoài là tự động thu lại */}
+            <div
+              className="fixed inset-0 z-40 bg-black/20"
+              onClick={() => setIsCategoryOpen(false)}
+            />
+
+            <div className="absolute top-full left-0 w-full md:w-80 bg-white text-gray-800 shadow-2xl border-b border-r border-gray-200 z-50 animate-fadeIn">
+              <ul className="divide-y divide-gray-100 text-sm">
+                {categories.map((cat, idx) => {
+                  const IconComp = cat.icon;
+                  return (
+                    <li key={idx}>
+                      <Link
+                        href={cat.href}
+                        className="flex items-center justify-between px-4 py-3 hover:bg-red-50 hover:text-red-600 transition font-medium text-xs md:text-sm"
+                        onClick={() => setIsCategoryOpen(false)}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <IconComp className="w-4 h-4 text-red-600 shrink-0" />
+                          <span>{cat.name}</span>
+                        </div>
+                        <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </>
         )}
       </nav>
     </header>
