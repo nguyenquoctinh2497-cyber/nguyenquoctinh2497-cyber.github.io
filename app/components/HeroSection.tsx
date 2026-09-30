@@ -17,18 +17,22 @@ import {
 } from "lucide-react";
 
 export default function HeroSection() {
+  // Cấu hình linh hoạt vị trí hiển thị (objectPos) cho từng ảnh để không bị mất chữ
   const banners = [
     {
       src: "/main-banner.jpg",
       alt: "Sắm Đồ Công Nghệ Không Lo Về Giá",
+      objectPos: "object-top",
     },
     {
       src: "/vga-banner.jpg",
       alt: "VGA RTX 50 Series - Sức Mạnh AI",
+      objectPos: "object-center",
     },
     {
       src: "/camera-banner.jpg",
       alt: "Camera An Ninh Chính Hãng",
+      objectPos: "object-center",
     },
   ];
 
@@ -65,18 +69,18 @@ export default function HeroSection() {
   return (
     <section className="py-3 bg-gray-100 font-sans">
       <div className="container mx-auto px-2">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
           
           {/* 1. DANH MỤC DỌC BÊN TRÁI (25% màn hình) */}
-          <div className="hidden lg:block lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-            <ul className="divide-y divide-gray-100 text-xs py-1">
+          <div className="hidden lg:block lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden min-h-[350px]">
+            <ul className="divide-y divide-gray-100 text-xs py-1 h-full flex flex-col justify-between">
               {sidebarCategories.map((item, idx) => {
                 const IconComp = item.icon;
                 return (
-                  <li key={idx}>
+                  <li key={idx} className="flex-1 flex items-center">
                     <Link
                       href={item.href}
-                      className={`w-full flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-600 transition font-medium ${
+                      className={`w-full flex items-center justify-between px-3 py-1.5 hover:bg-red-50 hover:text-red-600 transition font-medium ${
                         item.highlight ? "text-red-600 font-bold" : "text-gray-700"
                       }`}
                     >
@@ -92,15 +96,15 @@ export default function HeroSection() {
             </ul>
           </div>
 
-          {/* 2. KHỐI SLIDER BANNER TRÀN VIỀN 100% KHÔNG LỘ VIỀN ĐEN/XÁM (75% màn hình) */}
-          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2.5">
+          {/* 2. KHỐI SLIDER BANNER TRÀN VIỀN 100% HIỂN THỊ ĐỦ CHỮ (75% màn hình) */}
+          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2 justify-between">
             
-            {/* Khung Slider điều chỉnh h-[260px] đến h-[320px] giúp ảnh tràn full 100% width */}
-            <div className="w-full bg-black rounded-lg border border-gray-200 overflow-hidden relative shadow-sm group h-[260px] sm:h-[300px] md:h-[335px]">
+            {/* Khung chứa Banner chiều cao h-[280px] đến md:h-[300px] chuẩn tỉ lệ banner web */}
+            <div className="w-full bg-black rounded-lg border border-gray-200 overflow-hidden relative shadow-sm group h-[250px] sm:h-[280px] md:h-[300px]">
               <img
                 src={banners[currentSlide].src}
                 alt={banners[currentSlide].alt}
-                className="w-full h-full object-cover object-center transition-all duration-500"
+                className={`w-full h-full object-cover ${banners[currentSlide].objectPos} transition-all duration-500`}
               />
 
               {/* Nút Prev / Next */}
@@ -120,7 +124,7 @@ export default function HeroSection() {
                 <ChevronRight className="w-5 h-5" />
               </button>
 
-              {/* Chấm tròn chỉ số slide */}
+              {/* Chấm tròn đổi slide */}
               <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
                 {banners.map((_, index) => (
                   <button
