@@ -10,10 +10,9 @@ import {
   Smartphone,
   Cpu,
   Watch,
-  HardDrive,
-  Wrench,
   ChevronRight,
   Percent,
+  Wrench,
 } from "lucide-react";
 
 export default function HeroSection() {
@@ -35,9 +34,9 @@ export default function HeroSection() {
       <div className="container mx-auto px-2">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 items-start">
           
-          {/* 1. MENU DANH MỤC DỌC BÊN TRÁI (Chuẩn Trường Giang) */}
+          {/* 1. MENU DANH MỤC DỌC BÊN TRÁI (Khung ôm khít chuẩn) */}
           <div className="hidden lg:block lg:col-span-3 bg-white rounded border border-gray-200 shadow-sm overflow-hidden">
-            <div className="bg-red-600 text-white font-extrabold text-xs uppercase px-3 py-2.5 flex items-center gap-2">
+            <div className="bg-red-600 text-white font-extrabold text-xs uppercase px-3 py-2 flex items-center gap-2">
               <span>≡ DANH MỤC SẢN PHẨM</span>
             </div>
             <ul className="divide-y divide-gray-100 text-xs">
@@ -47,7 +46,7 @@ export default function HeroSection() {
                   <li key={idx}>
                     <Link
                       href={item.href}
-                      className={`flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-600 transition font-medium ${
+                      className={`flex items-center justify-between px-3 py-1.5 hover:bg-red-50 hover:text-red-600 transition font-medium ${
                         item.highlight ? "text-red-600 font-bold" : "text-gray-700"
                       }`}
                     >
@@ -63,31 +62,31 @@ export default function HeroSection() {
             </ul>
           </div>
 
-          {/* 2. KHỐI BANNER CHÍNH Ở GIỮA (Tỉ lệ chuẩn 16:9 không bị phình to) */}
+          {/* 2. KHỐI BANNER KHUYẾN MÃI Ở GIỮA (Tỉ lệ chuẩn 16:9 không bị phình to) */}
           <div className="col-span-1 lg:col-span-9 flex flex-col gap-2">
-            <div className="w-full bg-black rounded border border-gray-200 overflow-hidden relative aspect-[16/7] max-h-[360px]">
+            <div className="w-full bg-gray-900 rounded border border-gray-200 overflow-hidden relative h-[280px] md:h-[320px]">
               <img
-                src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=1200&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop"
                 alt="Banner Quảng Cáo Tĩnh Computer"
                 className="w-full h-full object-cover object-center"
               />
             </div>
 
-            {/* Sub-banners nhỏ phía dưới banner chính (Chuẩn phong cách Trường Giang) */}
+            {/* Sub-banners 4 ô nhỏ nằm ngay dưới banner chính */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-2.5 rounded text-center shadow-sm">
+              <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-2 rounded text-center shadow-sm">
                 <p className="text-[10px] font-bold uppercase opacity-80">ĐIỆN THOẠI CŨ</p>
                 <p className="text-xs font-black">CHỈ TỪ 1 TRIỆU</p>
               </div>
-              <div className="bg-gradient-to-r from-purple-700 to-indigo-800 text-white p-2.5 rounded text-center shadow-sm">
+              <div className="bg-gradient-to-r from-purple-700 to-indigo-800 text-white p-2 rounded text-center shadow-sm">
                 <p className="text-[10px] font-bold uppercase opacity-80">BUILD PC GAMING</p>
                 <p className="text-xs font-black">TRẢ GÓP 0Đ</p>
               </div>
-              <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-2.5 rounded text-center shadow-sm">
+              <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-2 rounded text-center shadow-sm">
                 <p className="text-[10px] font-bold uppercase opacity-80">LAPTOP GIÁ RẺ</p>
                 <p className="text-xs font-black">GIÁ TỪ 5 TRIỆU</p>
               </div>
-              <div className="bg-gradient-to-r from-red-600 to-orange-600 text-white p-2.5 rounded text-center shadow-sm">
+              <div className="bg-gradient-to-r from-red-600 to-orange-600 text-white p-2 rounded text-center shadow-sm">
                 <p className="text-[10px] font-bold uppercase opacity-80">SỬA CHỮA TẬN NƠI</p>
                 <p className="text-xs font-black">UY TÍN TẠI ĐÀ NẴNG</p>
               </div>
