@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { Phone, MessageCircle, MapPin, Menu } from "lucide-react";
+import { Phone, MessageCircle, MapPin } from "lucide-react";
 
 export default function MobileBottomBar() {
   return (
@@ -40,7 +39,7 @@ export default function MobileBottomBar() {
           <span className="text-[10px] font-medium text-gray-700 mt-0.5">Chat FB</span>
         </a>
 
-        {/* Nút Chỉ đường / Maps */}
+        {/* Nút Chỉ đường */}
         <a
           href="https://maps.google.com"
           target="_blank"
