@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { useCart } from "../../context/CartContext";
-import { useShop } from "../../context/ShopContext";
+import { useCart } from "../context/CartContext";
+import { useShop } from "../context/ShopContext";
 import {
   ShoppingBag,
   Trash2,
@@ -23,7 +23,6 @@ export default function CartPage() {
   const { cart, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
   const { shopInfo } = useShop();
 
-  // Đảm bảo lấy giá trị tổng tiền chuẩn từ Context
   const totalAmount = totalPrice || 0;
 
   const [showCheckoutForm, setShowCheckoutForm] = useState(false);
@@ -32,8 +31,7 @@ export default function CartPage() {
   const [loading, setLoading] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
 
-  // Cấu hình tài khoản ngân hàng VietinBank TĨNH COMPUTER
-  const BANK_ID = "ICB"; // Mã định danh VietQR của VietinBank
+  const BANK_ID = "ICB";
   const ACCOUNT_NO = "101882920146";
   const ACCOUNT_NAME = "NGUYEN QUOC TINH";
 
@@ -64,22 +62,18 @@ export default function CartPage() {
         setOrderSuccess(true);
         clearCart();
       } else {
-        // Dự phòng nếu chưa dựng Backend API /api/orders
         setOrderSuccess(true);
         clearCart();
       }
     } catch (err) {
       console.error("Lỗi gửi đơn hàng:", err);
-      // Vẫn xác nhận đơn hàng phòng trường hợp đặt offline
       setOrderSuccess(true);
       clearCart();
-    } font-sans
-    finally {
+    } finally {
       setLoading(false);
     }
   };
 
-  // Tự động tạo mã QR VietQR VietinBank chuẩn số tiền
   const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact2.png?amount=${totalAmount}&addInfo=THANH TOAN DON HANG ${customer.phone || "TINH COMPUTER"}&accountName=${encodeURIComponent(
     ACCOUNT_NAME
   )}`;
@@ -89,7 +83,6 @@ export default function CartPage() {
       <Header />
 
       <div className="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
-        {/* Header Tiêu Đề */}
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
           <div className="flex items-center gap-2">
             <Link href="/" className="text-gray-500 hover:text-red-600 transition flex items-center gap-1 text-xs font-bold">
@@ -111,7 +104,6 @@ export default function CartPage() {
           )}
         </div>
 
-        {/* THÀNH CÔNG */}
         {orderSuccess ? (
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 text-center max-w-lg mx-auto py-12">
             <CheckCircle size={60} className="text-green-500 mx-auto mb-4 animate-bounce" />
@@ -139,7 +131,6 @@ export default function CartPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Cột 1: Danh sách sản phẩm */}
             <div className="lg:col-span-7 space-y-4">
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
                 <h2 className="font-extrabold text-gray-800 mb-4 uppercase text-xs tracking-wider border-b pb-2">
@@ -183,9 +174,8 @@ export default function CartPage() {
                 </div>
               </div>
 
-              {/* KHUNG THANH TOÁN QR & PHƯƠNG THỨC */}
               {showCheckoutForm && (
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 animate-fadeIn">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
                   <h2 className="font-extrabold text-gray-800 mb-4 uppercase text-xs tracking-wider border-b pb-2 flex items-center gap-1.5">
                     <CreditCard size={16} className="text-red-600" /> Chọn phương thức thanh toán
                   </h2>
@@ -216,7 +206,6 @@ export default function CartPage() {
                     </button>
                   </div>
 
-                  {/* HIỂN THỊ MÃ QR NGÂN HÀNG VIETINBANK */}
                   {paymentMethod === "VIETQR" && (
                     <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 text-center">
                       <p className="text-xs font-bold text-gray-700 mb-3">
@@ -240,7 +229,6 @@ export default function CartPage() {
               )}
             </div>
 
-            {/* Cột 2: TỔNG ĐƠN HÀNG & FORM ĐIỀN THÔNG TIN */}
             <div className="lg:col-span-5">
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 sticky top-24 space-y-4">
                 <h2 className="font-extrabold text-gray-800 uppercase text-xs tracking-wider border-b pb-2">
