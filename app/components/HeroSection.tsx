@@ -59,13 +59,13 @@ export default function HeroSection() {
           </div>
 
           {/* 2. KHỐI BANNER THIẾT KẾ MỚI TĨNH COMPUTER (75% màn hình) */}
-          <div className="col-span-1 lg:col-span-9 flex flex-col gap-3">
-            {/* Khung chứa Banner chính chuẩn tỉ lệ ảnh */}
-            <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden relative shadow-sm aspect-[21/9] sm:aspect-[16/7] md:h-[350px]">
+          <div className="col-span-1 lg:col-span-9 flex flex-col gap-3 justify-between">
+            {/* Banner hiển thị trọn vẹn 100% không bị che xén chữ */}
+            <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden relative shadow-sm flex items-center justify-center min-h-[340px] md:min-h-[380px]">
               <img
                 src="/main-banner.jpg"
                 alt="Sắm Đồ Công Nghệ Không Lo Về Giá - Tĩnh Computer"
-                className="w-full h-full object-cover object-center"
+                className="w-full h-full object-contain object-center"
               />
             </div>
 
