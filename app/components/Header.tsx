@@ -20,8 +20,8 @@ export default function Header() {
   const { totalItems } = useCart();
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-md">
-      {/* 1. TOP HEADER BANNER THÔNG BÁO */}
+    <header className="sticky top-0 z-50 bg-white shadow-md font-sans">
+      {/* Top Header Bar */}
       <div className="bg-red-600 text-white text-xs md:text-sm font-semibold py-1.5 px-4 flex justify-between items-center">
         <span className="truncate">🔥 ƯU ĐÃI RƯỚC ĐÈN - GIẢM GIÁ TẤT CẢ DÒNG PC & LAPTOP TẠI ĐÀ NẴNG</span>
         <a href="tel:0989068821" className="font-extrabold hover:underline flex items-center gap-1.5 shrink-0 text-yellow-300">
@@ -29,10 +29,10 @@ export default function Header() {
         </a>
       </div>
 
-      {/* 2. MAIN HEADER (LOGO - SEARCH - USER - CART) */}
+      {/* Main Header */}
       <div className="container mx-auto px-3 py-3 flex items-center justify-between gap-3 md:gap-6">
         
-        {/* LOGO: Icon T đỏ + TINHCOMPUTER.VN + CAMERA • PC • LAPTOP */}
+        {/* LOGO TRÒN ĐỎ CHỮ T + TINHCOMPUTER.VN + CAMERA • PC • LAPTOP */}
         <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
           <div className="w-9 h-9 md:w-10 md:h-10 bg-red-600 rounded-full flex items-center justify-center text-white font-black text-xl md:text-2xl shadow-sm shrink-0 border-2 border-red-700">
             T
@@ -48,7 +48,7 @@ export default function Header() {
           </div>
         </Link>
 
-        {/* Ô TÌM KIẾM CHUẨN KÍCH THƯỚC */}
+        {/* Ô TÌM KIẾM */}
         <div className="flex-1 max-w-lg relative hidden sm:block">
           <div className="flex w-full border-2 border-red-600 rounded-md overflow-hidden">
             <input
@@ -62,9 +62,8 @@ export default function Header() {
           </div>
         </div>
 
-        {/* CỤM ĐĂNG NHẬP & GIỎ HÀNG */}
+        {/* ĐĂNG NHẬP & GIỎ HÀNG */}
         <div className="flex items-center gap-4 shrink-0">
-          {/* Nút Đăng nhập / Đăng ký kiểu Trường Giang */}
           <Link href="/login" className="hidden lg:flex items-center gap-2 hover:text-red-600 transition text-gray-700">
             <div className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center shrink-0">
               <User className="w-4 h-4" />
@@ -75,7 +74,6 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Giỏ Hàng */}
           <Link href="/cart" className="relative p-1.5 text-gray-700 hover:text-red-600 transition flex items-center gap-2">
             <div className="relative">
               <ShoppingCart className="w-7 h-7" />
@@ -86,7 +84,7 @@ export default function Header() {
               )}
             </div>
             <div className="hidden md:flex flex-col text-left leading-tight">
-              <span className="text-xs font-bold text-gray-800 uppercase">GIỎ HÀNG CỦA BẠN</span>
+              <span className="text-xs font-bold text-gray-800 uppercase">GIỎ HÀNG</span>
               <span className="text-[10px] text-gray-500 font-medium">
                 {totalItems > 0 ? `${totalItems} sản phẩm` : "Chưa có sản phẩm"}
               </span>
@@ -96,17 +94,17 @@ export default function Header() {
 
       </div>
 
-      {/* 3. NAV BAR MÀU ĐỎ CHUẨN TRƯỜNG GIANG - CHỮ TO, CÓ ICON TRỰC QUAN */}
+      {/* NAV BAR MÀU ĐỎ CHUẨN TRƯỜNG GIANG */}
       <nav className="bg-red-700 text-white border-t border-red-800">
         <div className="container mx-auto px-2 flex items-center">
           
-          {/* Ô DANH MỤC SẢN PHẨM (Khớp 25% với cột danh mục bên dưới) */}
+          {/* TIÊU ĐỀ DANH MỤC THẲNG HÀNG VỚI CỘT BÊN DƯỚI */}
           <div className="hidden lg:flex items-center justify-between bg-red-800 px-4 py-3 text-sm font-black uppercase w-full max-w-[25%] shrink-0 border-r border-red-600 select-none">
             <span>DANH MỤC SẢN PHẨM</span>
             <Menu className="w-5 h-5 text-yellow-300" />
           </div>
 
-          {/* Các mục Menu ngang font to rõ nét */}
+          {/* MENU NGANG */}
           <div className="flex items-center overflow-x-auto whitespace-nowrap scrollbar-none font-sans flex-1">
             <Link
               href="/news"
