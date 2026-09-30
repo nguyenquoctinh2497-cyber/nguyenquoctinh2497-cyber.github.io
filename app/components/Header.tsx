@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useCart } from "@/context/CartContext";
 import {
   Menu,
   X,
@@ -19,6 +20,7 @@ import {
 
 export default function Header() {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const { totalItems } = useCart(); // Lấy số lượng giỏ hàng thực tế ở đây
 
   const categories = [
     { name: "Laptop Mới", icon: Laptop, href: "/category/laptop-moi" },
@@ -33,7 +35,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-md">
-      {/* 1. Thanh thông báo trên cùng */}
+      {/* Top Header */}
       <div className="bg-red-600 text-white text-xs py-1.5 px-4 flex justify-between items-center">
         <span className="truncate">🔥 ƯU ĐÃI RƯỚC ĐÈN - GIẢM GIÁ TẤT CẢ DÒNG PC & LAPTOP</span>
         <a href="tel:0989068821" className="font-bold hover:underline flex items-center gap-1 shrink-0">
@@ -41,9 +43,8 @@ export default function Header() {
         </a>
       </div>
 
-      {/* 2. Main Header: Logo + Tìm kiếm + Giỏ hàng */}
+      {/* Main Header */}
       <div className="container mx-auto px-3 py-2.5 flex items-center justify-between gap-3">
-        {/* Logo */}
         <Link href="/" className="flex flex-col leading-none">
           <span className="text-xl md:text-2xl font-black text-red-600 tracking-tight">
             TINHCOMPUTER.VN
@@ -53,7 +54,7 @@ export default function Header() {
           </span>
         </Link>
 
-        {/* Ô Tìm Kiếm Sản Phẩm */}
+        {/* Search */}
         <div className="flex-1 max-w-md relative">
           <input
             type="text"
@@ -65,20 +66,21 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Giỏ hàng */}
+        {/* Cart Icon */}
         <Link href="/cart" className="relative p-2 text-gray-700 hover:text-red-600 transition">
           <ShoppingCart className="w-6 h-6" />
-          <span className="absolute top-0 right-0 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-            0
-          </span>
+          {totalItems > 0 && (
+            <span className="absolute top-0 right-0 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-pulse">
+              {totalItems}
+            </span>
+          )}
         </Link>
       </div>
 
-      {/* 3. Thanh Navigation Bar */}
+      {/* Nav */}
       <nav className="bg-red-700 text-white relative">
         <div className="container mx-auto px-2 flex items-center justify-between">
           <div className="flex items-center overflow-x-auto whitespace-nowrap scrollbar-none">
-            {/* Nút Bật/Tắt Danh Mục */}
             <button
               onClick={() => setIsCategoryOpen(!isCategoryOpen)}
               className="flex items-center gap-2 bg-red-800 hover:bg-red-900 px-4 py-2.5 text-xs font-bold uppercase transition"
@@ -87,7 +89,6 @@ export default function Header() {
               <span>DANH MỤC SẢN PHẨM</span>
             </button>
 
-            {/* Các Menu chính */}
             <Link href="/" className="px-3.5 py-2.5 text-xs font-semibold hover:bg-red-600 transition">
               TRANG CHỦ
             </Link>
@@ -103,7 +104,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* 4. Menu Thả Xuống (Dropdown Category Menu) khi bấm vào nút */}
+        {/* Dropdown Category */}
         {isCategoryOpen && (
           <div className="absolute top-full left-0 w-full md:w-80 bg-white text-gray-800 shadow-2xl border-b border-r border-gray-200 z-50">
             <ul className="divide-y divide-gray-100 text-sm">
