@@ -25,7 +25,7 @@ const slugify = (str: string) => {
     .replace(/^-+|-+$/g, "");
 };
 
-export default function CategoryPage({ params }: { params: { category: string } }) {
+export default function CleanCategoryPage({ params }: { params: { category: string } }) {
   const categorySlug = params?.category || "";
   const [products, setProducts] = useState<Product[]>([]);
 
@@ -87,7 +87,7 @@ export default function CategoryPage({ params }: { params: { category: string } 
     <div className="py-4 bg-gray-100 font-sans min-h-screen">
       <div className="container mx-auto px-2">
         
-        {/* Breadcrumb đường dẫn ngắn gọn chuẩn Trường Giang */}
+        {/* Breadcrumb chuẩn URL sạch */}
         <div className="flex items-center gap-1.5 text-xs text-gray-600 mb-3 bg-white p-2.5 rounded-lg border border-gray-200">
           <Link href="/" className="hover:text-red-600">Trang chủ</Link>
           <ChevronRight className="w-3 h-3 text-gray-400" />
@@ -107,7 +107,7 @@ export default function CategoryPage({ params }: { params: { category: string } 
           </select>
         </div>
 
-        {/* Danh sách thẻ sản phẩm */}
+        {/* Thẻ sản phẩm mở sang trang chi tiết 3 cột */}
         {products.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
             {products.map((item) => (
@@ -146,14 +146,14 @@ export default function CategoryPage({ params }: { params: { category: string } 
           </div>
         ) : (
           <div className="bg-white p-8 text-center rounded-lg border border-gray-200 text-gray-500 text-sm">
-            Chưa có sản phẩm nào thuộc danh mục này. Anh có thể vào Admin để thêm sản phẩm mới!
+            Chưa có sản phẩm nào thuộc danh mục này. Anh vào Admin thêm sản phẩm nhé!
           </div>
         )}
 
-        {/* Bài viết giới thiệu & SEO chuẩn Trường Giang */}
+        {/* Khối bài viết SEO thương hiệu */}
         <div className="mt-6 bg-white p-5 rounded-lg border border-gray-200 shadow-sm text-xs text-gray-700 space-y-3 leading-relaxed">
           <h2 className="text-sm font-bold text-gray-900 border-b pb-2 uppercase">
-            Giới thiệu về dịch vụ {categoryTitle} tại Tĩnh Computer Đà Nẵng
+            Giới thiệu về {categoryTitle} tại Tĩnh Computer Đà Nẵng
           </h2>
           <p>
             <strong>Tĩnh Computer</strong> chuyên phân phối các dòng sản phẩm{" "}
