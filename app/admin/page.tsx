@@ -8,6 +8,7 @@ import {
   ShoppingCart,
   Plus,
   Trash2,
+  Edit3,
   Search,
   Upload,
   ArrowUpRight,
@@ -16,6 +17,7 @@ import {
   Home,
   CheckCircle2,
   FileText,
+  X,
 } from "lucide-react";
 
 interface Product {
@@ -26,7 +28,6 @@ interface Product {
   category: string;
   brand: string;
   image: string;
-  description?: string;
   specs?: string[];
   inStock: boolean;
 }
@@ -36,17 +37,18 @@ export default function AdminDashboard() {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   
-  // Form state
+  // State quản lý Edit / Add
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [originalPrice, setOriginalPrice] = useState("");
-  const [category, setCategory] = useState("Laptop Mới / Cũ");
-  const [brand, setBrand] = useState("ASUS");
-  const [specsInput, setSpecsInput] = useState(""); // Ô nhập thông số kỹ thuật (mỗi dòng 1 gạch đầu dòng)
+  const [category, setCategory] = useState("Màn hình PC");
+  const [brand, setBrand] = useState("AIWA");
+  const [specsInput, setSpecsInput] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
-  // Load products từ API SQLite hoặc LocalStorage
+  // Fetch sản phẩm từ API SQLite / LocalStorage
   const fetchProducts = async () => {
     try {
       const res = await fetch("/api/products", { cache: "no-store" });
@@ -87,18 +89,45 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleAddProduct = async (e: React.FormEvent) => {
+  // Mở Form chỉnh sửa sản phẩm cũ
+  const handleEditClick = (product: Product) => {
+    setEditingId(product.id);
+    setName(product.name);
+    setPrice(product.price);
+    setOriginalPrice(product.originalPrice || "");
+    setCategory(product.category);
+    setBrand(product.brand || "");
+    setSpecsInput(product.specs ? product.specs.join("\n") : "");
+    setImagePreview(product.image);
+    setShowAddForm(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setEditingId(null);
+    setName("");
+    setPrice("");
+    setOriginalPrice("");
+    setCategory("Màn hình PC");
+    setBrand("AIWA");
+    setSpecsInput("");
+    setImagePreview(null);
+    setShowAddForm(false);
+  };
+
+  // Xử lý Thêm mới hoặc Cập nhật sản phẩm
+  const handleSubmitProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !price) return;
 
-    // Tách chuỗi nhập thông số thành mảng theo dòng
     const parsedSpecs = specsInput
       .split("\n")
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
 
-    const newProduct: Product = {
-      id: Date.now().toString(),
+    const productData: Product = {
+      id: editingId || Date.now().toString(),
       name,
       price,
       originalPrice: originalPrice || undefined,
@@ -109,34 +138,35 @@ export default function AdminDashboard() {
       inStock: true,
     };
 
-    // 1. Lưu vào SQLite API
+    // 1. Gửi dữ liệu tới API SQLite (PUT cho Update, POST cho Create)
     try {
       await fetch("/api/products", {
-        method: "POST",
+        method: editingId ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newProduct),
+        body: JSON.stringify(productData),
       });
     } catch (err) {
-      console.error("Lỗi lưu SQLite API:", err);
+      console.error("Lỗi cập nhật API SQLite:", err);
     }
 
-    // 2. Đồng bộ LocalStorage
-    const updated = [newProduct, ...products];
+    // 2. Cập nhật state & LocalStorage
+    let updated: Product[];
+    if (editingId) {
+      updated = products.map((p) => (p.id === editingId ? productData : p));
+    } else {
+      updated = [productData, ...products];
+    }
+
     setProducts(updated);
     localStorage.setItem("tinh_computer_products", JSON.stringify(updated));
 
-    // 3. Báo thời gian thực cho toàn bộ các trang khác
+    // 3. Phát tín hiệu cập nhật thời gian thực
     window.dispatchEvent(new Event("products_updated"));
 
-    // Reset Form
-    setName("");
-    setPrice("");
-    setOriginalPrice("");
-    setSpecsInput("");
-    setImagePreview(null);
-    setShowAddForm(false);
+    resetForm();
   };
 
+  // Xóa sản phẩm
   const handleDeleteProduct = async (id: string) => {
     if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này khỏi cơ sở dữ liệu?")) {
       try {
@@ -251,10 +281,16 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-3">
             {activeTab === "products" && (
               <button
-                onClick={() => setShowAddForm(!showAddForm)}
+                onClick={() => {
+                  if (showAddForm) {
+                    resetForm();
+                  } else {
+                    setShowAddForm(true);
+                  }
+                }}
                 className="bg-red-600 hover:bg-red-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center gap-2 transition shadow-lg shadow-red-600/20"
               >
-                <Plus className="w-4 h-4" />
+                {showAddForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
                 {showAddForm ? "Đóng Form" : "Thêm Sản Phẩm Mới"}
               </button>
             )}
@@ -309,16 +345,22 @@ export default function AdminDashboard() {
           {activeTab === "products" && (
             <div className="space-y-5">
               
-              {/* FORM THÊM SẢN PHẨM VỚI Ô THÔNG SỐ KỸ THUẬT NÂNG CẤP */}
+              {/* FORM THÊM / SỬA SẢN PHẨM */}
               {showAddForm && (
                 <div className="bg-slate-950 border border-red-900/50 p-5 rounded-xl shadow-xl space-y-4">
                   <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                     <h3 className="font-bold text-sm text-red-400 flex items-center gap-2">
-                      <Plus className="w-4 h-4" /> THÊM SẢN PHẨM MỚI KÈM THÔNG SỐ CHI TIẾT
+                      {editingId ? <Edit3 className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                      {editingId ? "CHỈNH SỬA THÔNG TIN SẢN PHẨM" : "THÊM SẢN PHẨM MỚI VÀO CƠ SỞ DỮ LIỆU"}
                     </h3>
+                    {editingId && (
+                      <span className="text-xs bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-full font-semibold">
+                        Đang sửa ID: {editingId}
+                      </span>
+                    )}
                   </div>
 
-                  <form onSubmit={handleAddProduct} className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                  <form onSubmit={handleSubmitProduct} className="grid grid-cols-1 md:grid-cols-12 gap-4">
                     <div className="md:col-span-6 space-y-1.5">
                       <label className="text-xs font-semibold text-slate-300">Tên Sản Phẩm *</label>
                       <input
@@ -386,13 +428,13 @@ export default function AdminDashboard() {
                       <div className="flex items-center gap-2">
                         <label className="flex-1 cursor-pointer bg-slate-900 border border-dashed border-slate-700 hover:border-red-500 rounded-lg p-2 text-center text-xs text-slate-400 transition flex items-center justify-center gap-2">
                           <Upload className="w-3.5 h-3.5 text-red-500" />
-                          <span>Chọn tệp ảnh</span>
+                          <span>Chọn tệp ảnh mới</span>
                           <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
                         </label>
                       </div>
                     </div>
 
-                    {/* Ô NHẬP THÔNG SỐ KỸ THUẬT DẠNG NHIỀU DÒNG (BULLET POINTS) */}
+                    {/* Ô NHẬP THÔNG SỐ KỸ THUẬT */}
                     <div className="md:col-span-12 space-y-1.5">
                       <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
                         <FileText className="w-3.5 h-3.5 text-red-400" /> Thông Số Kỹ Thuật Chi Tiết (Nhập mỗi thông số trên 1 dòng):
@@ -409,14 +451,14 @@ export default function AdminDashboard() {
                     {imagePreview && (
                       <div className="md:col-span-12 flex items-center gap-3 bg-slate-900 p-2.5 rounded-lg border border-slate-800">
                         <img src={imagePreview} alt="Preview" className="w-12 h-12 object-cover rounded" />
-                        <span className="text-xs text-emerald-400 font-medium">✓ Tải ảnh thành công!</span>
+                        <span className="text-xs text-emerald-400 font-medium">✓ Ảnh xem trước</span>
                       </div>
                     )}
 
                     <div className="md:col-span-12 pt-2 flex justify-end gap-2">
                       <button
                         type="button"
-                        onClick={() => setShowAddForm(false)}
+                        onClick={resetForm}
                         className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg transition"
                       >
                         Hủy Bỏ
@@ -425,7 +467,7 @@ export default function AdminDashboard() {
                         type="submit"
                         className="px-5 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-lg transition shadow-lg shadow-red-600/30"
                       >
-                        Lưu Sản Phẩm Ngay
+                        {editingId ? "Cập Nhật Sản Phẩm" : "Lưu Sản Phẩm Ngay"}
                       </button>
                     </div>
                   </form>
@@ -485,13 +527,25 @@ export default function AdminDashboard() {
                             <span className="font-black text-red-400">{product.price}</span>
                           </td>
                           <td className="py-3 px-4 text-center">
-                            <button
-                              onClick={() => handleDeleteProduct(product.id)}
-                              className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition"
-                              title="Xóa sản phẩm"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
+                            <div className="flex items-center justify-center gap-1">
+                              {/* NÚT CHỈNH SỬA SẢN PHẨM */}
+                              <button
+                                onClick={() => handleEditClick(product)}
+                                className="p-2 text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition"
+                                title="Chỉnh sửa thông tin"
+                              >
+                                <Edit3 className="w-4 h-4" />
+                              </button>
+
+                              {/* NÚT XÓA SẢN PHẨM */}
+                              <button
+                                onClick={() => handleDeleteProduct(product.id)}
+                                className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition"
+                                title="Xóa sản phẩm"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
