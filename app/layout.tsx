@@ -39,5 +39,28 @@ export default function RootLayout({
         <Analytics />
       </body>
     </html>
+    import type { Metadata } from "next";
+import "./globals.css";
+import MobileBottomBar from "./components/MobileBottomBar";
+
+export const metadata: Metadata = {
+  title: "Sửa Máy Tính Đà Nẵng & Lắp Đặt Camera - Tĩnh Computer",
+  description: "Tĩnh Computer chuyên sửa chữa máy tính, laptop, PC gaming, camera quan sát tại Đà Nẵng.",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="vi">
+      <body className="pb-14 md:pb-0"> {/* pb-14 tạo khoảng trống ở đáy để thanh bottom bar không che nội dung */}
+        {children}
+        <MobileBottomBar />
+      </body>
+    </html>
+  );
+}
   );
 }
