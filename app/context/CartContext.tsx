@@ -3,106 +3,85 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 export interface CartItem {
-  id: number;
+  id: string;
   name: string;
-  price: string;
-  numericPrice?: number;
+  price: number;
+  image: string;
   quantity: number;
-  image?: string;
 }
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (item: Omit<CartItem, "quantity">) => void;
-  removeFromCart: (id: number) => void;
-  updateQuantity: (id: number, delta: number) => void;
+  addToCart: (product: Omit<CartItem, "quantity">) => void;
+  removeFromCart: (id: string) => void;
+  updateQuantity: (id: string, deltaOrQuantity: number) => void;
   clearCart: () => void;
+  totalItems: number;
+  totalPrice: number;
   totalAmount: number;
-  totalCount: number;
 }
 
-const CartContext = createContext<CartContextType>({
-  cart: [],
-  addToCart: () => {},
-  removeFromCart: () => {},
-  updateQuantity: () => {},
-  clearCart: () => {},
-  totalAmount: 0,
-  totalCount: 0,
-});
+const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider = ({ children }: { children: React.ReactNode }) => {
+export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  // Đọc giỏ hàng từ LocalStorage
   useEffect(() => {
-    const savedCart = localStorage.getItem("tinh_computer_cart");
+    const savedCart = localStorage.getItem("tinhcomputer_cart");
     if (savedCart) {
       try {
         setCart(JSON.parse(savedCart));
       } catch (e) {
-        console.error("Lỗi đọc giỏ hàng:", e);
+        console.error(e);
       }
     }
   }, []);
 
-  const saveCart = (newCart: CartItem[]) => {
-    setCart(newCart);
-    localStorage.setItem("tinh_computer_cart", JSON.stringify(newCart));
-  };
-
-  // Hàm hỗ trợ tách lấy số chuẩn từ giá tiền (ví dụ "29.990.000đ" -> 29990000)
-  const parsePriceToNumber = (item: Omit<CartItem, "quantity">) => {
-    if (typeof item.numericPrice === "number" && !isNaN(item.numericPrice) && item.numericPrice > 0) {
-      return item.numericPrice;
-    }
-    const cleanStr = String(item.price || "").replace(/\D/g, "");
-    return parseInt(cleanStr, 10) || 0;
-  };
+  useEffect(() => {
+    localStorage.setItem("tinhcomputer_cart", JSON.stringify(cart));
+  }, [cart]);
 
   const addToCart = (product: Omit<CartItem, "quantity">) => {
-    const validPrice = parsePriceToNumber(product);
-    const existingIndex = cart.findIndex((item) => item.id === product.id);
-
-    if (existingIndex > -1) {
-      const updated = [...cart];
-      updated[existingIndex].quantity += 1;
-      updated[existingIndex].numericPrice = validPrice;
-      saveCart(updated);
-    } else {
-      saveCart([...cart, { ...product, numericPrice: validPrice, quantity: 1 }]);
-    }
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => String(item.id) === String(product.id));
+      if (existingItem) {
+        return prevCart.map((item) =>
+          String(item.id) === String(product.id) ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+      return [...prevCart, { ...product, id: String(product.id), quantity: 1 }];
+    });
   };
 
-  const removeFromCart = (id: number) => {
-    saveCart(cart.filter((item) => item.id !== id));
+  const removeFromCart = (id: string) => {
+    setCart((prevCart) => prevCart.filter((item) => String(item.id) !== String(id)));
   };
 
-  const updateQuantity = (id: number, delta: number) => {
-    const updated = cart
-      .map((item) => {
-        if (item.id === id) {
-          const newQty = item.quantity + delta;
-          return newQty > 0 ? { ...item, quantity: newQty } : null;
-        }
-        return item;
-      })
-      .filter(Boolean) as CartItem[];
-    saveCart(updated);
+  const updateQuantity = (id: string, val: number) => {
+    setCart((prevCart) => {
+      const existing = prevCart.find((item) => String(item.id) === String(id));
+      if (!existing) return prevCart;
+
+      // Hỗ trợ cả 2 cách: cộng dồn delta (-1, +1) hoặc đặt số lượng trực tiếp
+      let newQty = val;
+      if (val === 1 || val === -1) {
+        newQty = existing.quantity + val;
+      }
+
+      if (newQty <= 0) {
+        return prevCart.filter((item) => String(item.id) !== String(id));
+      }
+
+      return prevCart.map((item) =>
+        String(item.id) === String(id) ? { ...item, quantity: newQty } : item
+      );
+    });
   };
 
-  const clearCart = () => {
-    saveCart([]);
-  };
+  const clearCart = () => setCart([]);
 
-  // Tính tổng tiền an toàn 100%, không bao giờ bị NaN
-  const totalAmount = cart.reduce((sum, item) => {
-    const itemPrice = parsePriceToNumber(item);
-    const qty = Number(item.quantity) || 1;
-    return sum + itemPrice * qty;
-  }, 0);
-
-  const totalCount = cart.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <CartContext.Provider
@@ -112,13 +91,20 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         removeFromCart,
         updateQuantity,
         clearCart,
-        totalAmount,
-        totalCount,
+        totalItems,
+        totalPrice,
+        totalAmount: totalPrice,
       }}
     >
       {children}
     </CartContext.Provider>
   );
-};
+}
 
-export const useCart = () => useContext(CartContext);
+export function useCart() {
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error("useCart must be used within a CartProvider");
+  }
+  return context;
+}

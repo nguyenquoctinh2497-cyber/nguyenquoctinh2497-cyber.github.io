@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { useCart } from "../context/CartContext";
-import { useShop } from "../context/ShopContext";
+import { useCart } from "../../context/CartContext";
+import { useShop } from "../../context/ShopContext";
 import {
   ShoppingBag,
   Trash2,
@@ -143,20 +143,20 @@ export default function CartPage() {
                       <div className="flex-1">
                         <h3 className="font-bold text-sm text-gray-800">{item.name}</h3>
                         <p className="text-xs text-red-600 font-extrabold mt-0.5">
-                          {item.price.toLocaleString("vi-VN")} đ <span className="text-gray-400 font-normal">x {item.quantity}</span>
+                          {Number(item.price).toLocaleString("vi-VN")} đ <span className="text-gray-400 font-normal">x {item.quantity}</span>
                         </p>
                       </div>
 
                       <div className="flex items-center gap-2 border border-gray-200 rounded-lg p-1 bg-gray-50">
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() => updateQuantity(String(item.id), -1)}
                           className="p-1 hover:bg-white rounded transition text-gray-600 cursor-pointer"
                         >
                           <Minus size={14} />
                         </button>
                         <span className="font-bold text-xs px-2">{item.quantity}</span>
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateQuantity(String(item.id), 1)}
                           className="p-1 hover:bg-white rounded transition text-gray-600 cursor-pointer"
                         >
                           <Plus size={14} />
@@ -164,7 +164,7 @@ export default function CartPage() {
                       </div>
 
                       <button
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => removeFromCart(String(item.id))}
                         className="text-gray-400 hover:text-red-600 p-1.5 transition cursor-pointer"
                       >
                         <Trash2 size={16} />

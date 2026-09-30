@@ -1,10 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../../context/CartContext";
 import { ShoppingCart } from "lucide-react";
 
-const sampleProducts = [
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+}
+
+const sampleProducts: Product[] = [
   {
     id: "pc-gaming-i5",
     name: "PC Gaming Core i5 12400F / RAM 16GB / RTX 3060 12GB",
@@ -31,8 +38,13 @@ const sampleProducts = [
   },
 ];
 
-export default function ProductGrid() {
+interface ProductGridProps {
+  products?: Product[];
+}
+
+export default function ProductGrid({ products }: ProductGridProps) {
   const { addToCart } = useCart();
+  const displayProducts = products || sampleProducts;
 
   return (
     <section className="py-6 bg-gray-50">
@@ -42,7 +54,7 @@ export default function ProductGrid() {
         </h2>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          {sampleProducts.map((product) => (
+          {displayProducts.map((product) => (
             <div
               key={product.id}
               className="bg-white rounded-lg border border-gray-200 p-3 flex flex-col justify-between hover:shadow-md transition"
@@ -68,9 +80,9 @@ export default function ProductGrid() {
                 <button
                   onClick={() =>
                     addToCart({
-                      id: product.id,
+                      id: String(product.id),
                       name: product.name,
-                      price: product.price,
+                      price: Number(product.price),
                       image: product.image,
                     })
                   }

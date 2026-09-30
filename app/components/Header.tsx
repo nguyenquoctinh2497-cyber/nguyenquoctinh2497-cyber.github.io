@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../../context/CartContext";
 import {
   Menu,
   X,
@@ -35,7 +35,6 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-md">
-      {/* Top Header */}
       <div className="bg-red-600 text-white text-xs py-1.5 px-4 flex justify-between items-center">
         <span className="truncate">🔥 ƯU ĐÃI RƯỚC ĐÈN - GIẢM GIÁ TẤT CẢ DÒNG PC & LAPTOP</span>
         <a href="tel:0989068821" className="font-bold hover:underline flex items-center gap-1 shrink-0">
@@ -43,7 +42,6 @@ export default function Header() {
         </a>
       </div>
 
-      {/* Main Header */}
       <div className="container mx-auto px-3 py-2.5 flex items-center justify-between gap-3">
         <Link href="/" className="flex flex-col leading-none">
           <span className="text-xl md:text-2xl font-black text-red-600 tracking-tight">
@@ -54,7 +52,6 @@ export default function Header() {
           </span>
         </Link>
 
-        {/* Search */}
         <div className="flex-1 max-w-md relative">
           <input
             type="text"
@@ -66,7 +63,6 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Cart Icon */}
         <Link href="/cart" className="relative p-2 text-gray-700 hover:text-red-600 transition">
           <ShoppingCart className="w-6 h-6" />
           {totalItems > 0 && (
@@ -77,7 +73,6 @@ export default function Header() {
         </Link>
       </div>
 
-      {/* Nav */}
       <nav className="bg-red-700 text-white relative">
         <div className="container mx-auto px-2 flex items-center justify-between">
           <div className="flex items-center overflow-x-auto whitespace-nowrap scrollbar-none">
@@ -104,7 +99,6 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Dropdown Category */}
         {isCategoryOpen && (
           <div className="absolute top-full left-0 w-full md:w-80 bg-white text-gray-800 shadow-2xl border-b border-r border-gray-200 z-50">
             <ul className="divide-y divide-gray-100 text-sm">
