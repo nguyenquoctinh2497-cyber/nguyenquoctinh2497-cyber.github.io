@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { ShoppingCart, ChevronRight, SlidersHorizontal, CheckCircle2 } from "lucide-react";
 
@@ -25,8 +25,15 @@ const slugify = (str: string) => {
     .replace(/^-+|-+$/g, "");
 };
 
-export default function CleanCategoryPage({ params }: { params: { category: string } }) {
-  const categorySlug = params?.category || "";
+export default function DynamicSlugPage({
+  params,
+}: {
+  params: Promise<{ slug: string[] }>;
+}) {
+  const resolvedParams = use(params);
+  const slugArray = resolvedParams?.slug || [];
+  const currentSlug = slugArray[slugArray.length - 1] || "";
+
   const [products, setProducts] = useState<Product[]>([]);
 
   const fetchCategoryProducts = async () => {
@@ -59,10 +66,10 @@ export default function CleanCategoryPage({ params }: { params: { category: stri
       const prodCatSlug = slugify(p.category || "");
       const prodBrandSlug = slugify(p.brand || "");
       return (
-        prodCatSlug.includes(categorySlug) ||
-        categorySlug.includes(prodCatSlug) ||
-        prodBrandSlug.includes(categorySlug) ||
-        categorySlug.includes(prodBrandSlug)
+        prodCatSlug.includes(currentSlug) ||
+        currentSlug.includes(prodCatSlug) ||
+        prodBrandSlug.includes(currentSlug) ||
+        currentSlug.includes(prodBrandSlug)
       );
     });
 
@@ -70,7 +77,9 @@ export default function CleanCategoryPage({ params }: { params: { category: stri
   };
 
   useEffect(() => {
-    fetchCategoryProducts();
+    if (currentSlug) {
+      fetchCategoryProducts();
+    }
 
     window.addEventListener("products_updated", fetchCategoryProducts);
     window.addEventListener("storage", fetchCategoryProducts);
@@ -79,22 +88,22 @@ export default function CleanCategoryPage({ params }: { params: { category: stri
       window.removeEventListener("products_updated", fetchCategoryProducts);
       window.removeEventListener("storage", fetchCategoryProducts);
     };
-  }, [categorySlug]);
+  }, [currentSlug]);
 
-  const categoryTitle = categorySlug.replace(/-/g, " ").toUpperCase();
+  const categoryTitle = currentSlug.replace(/-/g, " ").toUpperCase();
 
   return (
     <div className="py-4 bg-gray-100 font-sans min-h-screen">
       <div className="container mx-auto px-2">
         
-        {/* Breadcrumb chuẩn URL sạch */}
+        {/* Breadcrumb chuẩn URL không prefix */}
         <div className="flex items-center gap-1.5 text-xs text-gray-600 mb-3 bg-white p-2.5 rounded-lg border border-gray-200">
           <Link href="/" className="hover:text-red-600">Trang chủ</Link>
           <ChevronRight className="w-3 h-3 text-gray-400" />
           <span className="text-gray-900 font-bold uppercase">{categoryTitle}</span>
         </div>
 
-        {/* Bộ lọc sản phẩm */}
+        {/* Thanh Bộ lọc */}
         <div className="bg-white p-3 rounded-lg border border-gray-200 mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs font-bold text-gray-700">
             <SlidersHorizontal className="w-4 h-4 text-red-600" />
@@ -107,7 +116,7 @@ export default function CleanCategoryPage({ params }: { params: { category: stri
           </select>
         </div>
 
-        {/* Thẻ sản phẩm mở sang trang chi tiết 3 cột */}
+        {/* Danh sách sản phẩm mở sang trang chi tiết 3 cột */}
         {products.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
             {products.map((item) => (
@@ -146,14 +155,14 @@ export default function CleanCategoryPage({ params }: { params: { category: stri
           </div>
         ) : (
           <div className="bg-white p-8 text-center rounded-lg border border-gray-200 text-gray-500 text-sm">
-            Chưa có sản phẩm nào thuộc danh mục này. Anh vào Admin thêm sản phẩm nhé!
+            Chưa có sản phẩm nào thuộc danh mục này. Anh có thể vào Admin thêm sản phẩm mới!
           </div>
         )}
 
-        {/* Khối bài viết SEO thương hiệu */}
+        {/* Bài viết SEO giới thiệu bên dưới chuẩn Trường Giang */}
         <div className="mt-6 bg-white p-5 rounded-lg border border-gray-200 shadow-sm text-xs text-gray-700 space-y-3 leading-relaxed">
           <h2 className="text-sm font-bold text-gray-900 border-b pb-2 uppercase">
-            Giới thiệu về {categoryTitle} tại Tĩnh Computer Đà Nẵng
+            Giới thiệu về dịch vụ {categoryTitle} tại Tĩnh Computer Đà Nẵng
           </h2>
           <p>
             <strong>Tĩnh Computer</strong> chuyên phân phối các dòng sản phẩm{" "}
