@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingCart, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ShoppingCart, ChevronRight, SlidersHorizontal, CheckCircle2 } from "lucide-react";
 
 interface Product {
   id: string;
@@ -14,7 +14,7 @@ interface Product {
   image: string;
 }
 
-const slugifyify = (str: string) => {
+const slugify = (str: string) => {
   return str
     .toLowerCase()
     .normalize("NFD")
@@ -25,13 +25,8 @@ const slugifyify = (str: string) => {
     .replace(/^-+|-+$/g, "");
 };
 
-export default function DynamicCategoryPage({
-  params,
-}: {
-  params: Promise<{ category: string }>;
-}) {
-  const resolvedParams = use(params);
-  const categorySlug = resolvedParams.category;
+export default function CategoryPage({ params }: { params: { category: string } }) {
+  const categorySlug = params?.category || "";
   const [products, setProducts] = useState<Product[]>([]);
 
   const fetchCategoryProducts = async () => {
@@ -61,11 +56,11 @@ export default function DynamicCategoryPage({
     }
 
     const filtered = allProducts.filter((p) => {
-      const prodCategorySlug = slugifyify(p.category);
-      const prodBrandSlug = slugifyify(p.brand || "");
+      const prodCatSlug = slugify(p.category || "");
+      const prodBrandSlug = slugify(p.brand || "");
       return (
-        prodCategorySlug.includes(categorySlug) ||
-        categorySlug.includes(prodCategorySlug) ||
+        prodCatSlug.includes(categorySlug) ||
+        categorySlug.includes(prodCatSlug) ||
         prodBrandSlug.includes(categorySlug) ||
         categorySlug.includes(prodBrandSlug)
       );
@@ -92,14 +87,14 @@ export default function DynamicCategoryPage({
     <div className="py-4 bg-gray-100 font-sans min-h-screen">
       <div className="container mx-auto px-2">
         
-        {/* Breadcrumb duong dan xịn */}
+        {/* Breadcrumb đường dẫn ngắn gọn chuẩn Trường Giang */}
         <div className="flex items-center gap-1.5 text-xs text-gray-600 mb-3 bg-white p-2.5 rounded-lg border border-gray-200">
           <Link href="/" className="hover:text-red-600">Trang chủ</Link>
           <ChevronRight className="w-3 h-3 text-gray-400" />
           <span className="text-gray-900 font-bold uppercase">{categoryTitle}</span>
         </div>
 
-        {/* Thanh Bo Loc */}
+        {/* Bộ lọc sản phẩm */}
         <div className="bg-white p-3 rounded-lg border border-gray-200 mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs font-bold text-gray-700">
             <SlidersHorizontal className="w-4 h-4 text-red-600" />
@@ -112,9 +107,9 @@ export default function DynamicCategoryPage({
           </select>
         </div>
 
-        {/* Danh sach san pham */}
+        {/* Danh sách thẻ sản phẩm */}
         {products.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
             {products.map((item) => (
               <Link
                 key={item.id}
@@ -151,25 +146,24 @@ export default function DynamicCategoryPage({
           </div>
         ) : (
           <div className="bg-white p-8 text-center rounded-lg border border-gray-200 text-gray-500 text-sm">
-            Chưa có sản phẩm nào thuộc danh mục này. Anh vào Admin để thêm sản phẩm mới nhé!
+            Chưa có sản phẩm nào thuộc danh mục này. Anh có thể vào Admin để thêm sản phẩm mới!
           </div>
         )}
 
-        {/* Bai viet SEO va Gioi thieu thuong hieu chuan Truong Giang */}
+        {/* Bài viết giới thiệu & SEO chuẩn Trường Giang */}
         <div className="mt-6 bg-white p-5 rounded-lg border border-gray-200 shadow-sm text-xs text-gray-700 space-y-3 leading-relaxed">
-          <h2 className="text-base font-bold text-gray-900 border-b pb-2 uppercase">
+          <h2 className="text-sm font-bold text-gray-900 border-b pb-2 uppercase">
             Giới thiệu về dịch vụ {categoryTitle} tại Tĩnh Computer Đà Nẵng
           </h2>
           <p>
-            <strong>Tĩnh Computer</strong> chuyên cung cấp các dòng sản phẩm{" "}
-            <strong>{categoryTitle}</strong> chính hãng, uy tín hàng đầu tại Đà Nẵng.
-            Tất cả sản phẩm bán ra đều được kiểm tra kỹ lưỡng, hỗ trợ giao hàng tận nơi
-            và bảo hành chu đáo.
+            <strong>Tĩnh Computer</strong> chuyên phân phối các dòng sản phẩm{" "}
+            <strong>{categoryTitle}</strong> chính hãng, giá cạnh tranh hàng đầu tại Đà Nẵng.
+            Tất cả sản phẩm đều được kiểm tra kỹ lưỡng, bảo hành chu đáo và hỗ trợ giao hàng tận nơi.
           </p>
-          <p>
-            Quý khách có nhu cầu tư vấn hoặc đặt mua sản phẩm xin vui lòng liên hệ hotline:{" "}
-            <strong className="text-red-600">0989.068.821</strong> để nhận báo giá ưu đãi tốt nhất!
-          </p>
+          <div className="flex items-center gap-2 text-red-600 font-bold pt-1">
+            <CheckCircle2 className="w-4 h-4" />
+            <span>Hotline tư vấn & báo giá nhanh: 0989.068.821</span>
+          </div>
         </div>
 
       </div>
