@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Laptop,
@@ -11,48 +10,11 @@ import {
   Cpu,
   Watch,
   ChevronRight,
-  ChevronLeft,
   Percent,
   Wrench,
 } from "lucide-react";
 
 export default function HeroSection() {
-  // Cấu hình linh hoạt vị trí hiển thị (objectPos) cho từng ảnh để không bị mất chữ
-  const banners = [
-    {
-      src: "/main-banner.jpg",
-      alt: "Sắm Đồ Công Nghệ Không Lo Về Giá",
-      objectPos: "object-top",
-    },
-    {
-      src: "/vga-banner.jpg",
-      alt: "VGA RTX 50 Series - Sức Mạnh AI",
-      objectPos: "object-center",
-    },
-    {
-      src: "/camera-banner.jpg",
-      alt: "Camera An Ninh Chính Hãng",
-      objectPos: "object-center",
-    },
-  ];
-
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % banners.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [banners.length]);
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length);
-  };
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % banners.length);
-  };
-
   const sidebarCategories = [
     { name: "Hàng cũ Sale 50%", icon: Percent, href: "/category/hang-cu-sale", highlight: true },
     { name: "Laptop Mới / Cũ", icon: Laptop, href: "/category/laptop" },
@@ -72,7 +34,7 @@ export default function HeroSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
           
           {/* 1. DANH MỤC DỌC BÊN TRÁI (25% màn hình) */}
-          <div className="hidden lg:block lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden min-h-[350px]">
+          <div className="hidden lg:block lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden h-full">
             <ul className="divide-y divide-gray-100 text-xs py-1 h-full flex flex-col justify-between">
               {sidebarCategories.map((item, idx) => {
                 const IconComp = item.icon;
@@ -80,7 +42,7 @@ export default function HeroSection() {
                   <li key={idx} className="flex-1 flex items-center">
                     <Link
                       href={item.href}
-                      className={`w-full flex items-center justify-between px-3 py-1.5 hover:bg-red-50 hover:text-red-600 transition font-medium ${
+                      className={`w-full flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-600 transition font-medium ${
                         item.highlight ? "text-red-600 font-bold" : "text-gray-700"
                       }`}
                     >
@@ -96,46 +58,16 @@ export default function HeroSection() {
             </ul>
           </div>
 
-          {/* 2. KHỐI SLIDER BANNER TRÀN VIỀN 100% HIỂN THỊ ĐỦ CHỮ (75% màn hình) */}
-          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2 justify-between">
+          {/* 2. KHỐI BANNER CHÍNH DUY NHẤT (75% màn hình) */}
+          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2.5 justify-between">
             
-            {/* Khung chứa Banner chiều cao h-[280px] đến md:h-[300px] chuẩn tỉ lệ banner web */}
-            <div className="w-full bg-black rounded-lg border border-gray-200 overflow-hidden relative shadow-sm group h-[250px] sm:h-[280px] md:h-[300px]">
+            {/* Khung chứa Banner chính - hiển thị nguyên vẹn 100% */}
+            <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden relative shadow-sm h-[260px] sm:h-[300px] md:h-[320px]">
               <img
-                src={banners[currentSlide].src}
-                alt={banners[currentSlide].alt}
-                className={`w-full h-full object-cover ${banners[currentSlide].objectPos} transition-all duration-500`}
+                src="/main-banner.jpg"
+                alt="Sắm Đồ Công Nghệ Không Lo Về Giá - Tĩnh Computer"
+                className="w-full h-full object-cover object-top transition-all duration-300"
               />
-
-              {/* Nút Prev / Next */}
-              <button
-                onClick={prevSlide}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition duration-300 z-10"
-                title="Banner trước"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-
-              <button
-                onClick={nextSlide}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition duration-300 z-10"
-                title="Banner tiếp theo"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-
-              {/* Chấm tròn đổi slide */}
-              <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
-                {banners.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className={`h-2.5 rounded-full transition-all duration-300 ${
-                      currentSlide === index ? "w-7 bg-red-600" : "w-2.5 bg-white/70 hover:bg-white"
-                    }`}
-                  />
-                ))}
-              </div>
             </div>
 
             {/* 4 Nút Dịch Vụ Nổi Nằm Dưới Banner */}
