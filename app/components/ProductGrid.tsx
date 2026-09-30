@@ -16,25 +16,25 @@ const sampleProducts: Product[] = [
     id: "pc-gaming-i5",
     name: "PC Gaming Core i5 12400F / RAM 16GB / RTX 3060 12GB",
     price: 13500000,
-    image: "https://via.placeholder.com/300x300",
+    image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=400&auto=format&fit=crop",
   },
   {
     id: "laptop-dell-inspiron",
     name: "Laptop Dell Inspiron 15 3520 i5-1235U / RAM 8GB / SSD 512GB",
     price: 12900000,
-    image: "https://via.placeholder.com/300x300",
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=400&auto=format&fit=crop",
   },
   {
     id: "camera-imou-2-mat",
     name: "Camera An Ninh Imou 2 Mắt 10MP Ngoài Trời",
     price: 1250000,
-    image: "https://via.placeholder.com/300x300",
+    image: "https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=400&auto=format&fit=crop",
   },
   {
     id: "man-hinh-gaming-24inch",
     name: "Màn Hình Gaming 24 inch 180Hz IPS Cực Nét",
     price: 2850000,
-    image: "https://via.placeholder.com/300x300",
+    image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=400&auto=format&fit=crop",
   },
 ];
 
