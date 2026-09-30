@@ -21,17 +21,14 @@ export default function HeroSection() {
     {
       src: "/main-banner.jpg",
       alt: "Sắm Đồ Công Nghệ Không Lo Về Giá",
-      bgColor: "bg-white",
     },
     {
       src: "/vga-banner.jpg",
       alt: "VGA RTX 50 Series - Sức Mạnh AI",
-      bgColor: "bg-[#0d0304]",
     },
     {
       src: "/camera-banner.jpg",
       alt: "Camera An Ninh Chính Hãng",
-      bgColor: "bg-[#0b0a0d]",
     },
   ];
 
@@ -71,15 +68,15 @@ export default function HeroSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
           
           {/* 1. DANH MỤC DỌC BÊN TRÁI (25% màn hình) */}
-          <div className="hidden lg:block lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden h-full min-h-[380px]">
-            <ul className="divide-y divide-gray-100 text-xs py-1 h-full flex flex-col justify-between">
+          <div className="hidden lg:block lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+            <ul className="divide-y divide-gray-100 text-xs py-1">
               {sidebarCategories.map((item, idx) => {
                 const IconComp = item.icon;
                 return (
-                  <li key={idx} className="flex-1 flex items-center">
+                  <li key={idx}>
                     <Link
                       href={item.href}
-                      className={`w-full flex items-center justify-between px-3 py-1.5 hover:bg-red-50 hover:text-red-600 transition font-medium ${
+                      className={`w-full flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-600 transition font-medium ${
                         item.highlight ? "text-red-600 font-bold" : "text-gray-700"
                       }`}
                     >
@@ -95,15 +92,15 @@ export default function HeroSection() {
             </ul>
           </div>
 
-          {/* 2. KHỐI SLIDER BANNER HIỂN THỊ ĐẦY ĐỦ 100% KHÔNG CẮT XÉN (75% màn hình) */}
-          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2">
+          {/* 2. KHỐI SLIDER BANNER TRÀN VIỀN 100% KHÔNG LỘ VIỀN ĐEN/XÁM (75% màn hình) */}
+          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2.5">
             
-            {/* Khung chứa Banner tự điều chỉnh theo tỷ lệ ảnh */}
-            <div className={`w-full ${banners[currentSlide].bgColor} rounded-lg border border-gray-200 overflow-hidden relative shadow-sm group aspect-[16/8] sm:aspect-[16/7] md:aspect-[2.2/1] transition-colors duration-500 flex items-center justify-center`}>
+            {/* Khung Slider điều chỉnh h-[260px] đến h-[320px] giúp ảnh tràn full 100% width */}
+            <div className="w-full bg-black rounded-lg border border-gray-200 overflow-hidden relative shadow-sm group h-[260px] sm:h-[300px] md:h-[335px]">
               <img
                 src={banners[currentSlide].src}
                 alt={banners[currentSlide].alt}
-                className="w-full h-full object-contain object-center transition-all duration-300"
+                className="w-full h-full object-cover object-center transition-all duration-500"
               />
 
               {/* Nút Prev / Next */}
