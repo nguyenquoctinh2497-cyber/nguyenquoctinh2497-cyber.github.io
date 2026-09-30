@@ -31,15 +31,15 @@ export default function HeroSection() {
   return (
     <section className="py-3 bg-gray-100 font-sans">
       <div className="container mx-auto px-2">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
           
           {/* 1. DANH MỤC DỌC BÊN TRÁI (25% màn hình) */}
-          <div className="hidden lg:block lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden h-full">
-            <ul className="divide-y divide-gray-100 text-xs py-1 h-full flex flex-col justify-between">
+          <div className="hidden lg:block lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+            <ul className="divide-y divide-gray-100 text-xs py-1">
               {sidebarCategories.map((item, idx) => {
                 const IconComp = item.icon;
                 return (
-                  <li key={idx} className="flex-1 flex items-center">
+                  <li key={idx}>
                     <Link
                       href={item.href}
                       className={`w-full flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-600 transition font-medium ${
@@ -58,15 +58,15 @@ export default function HeroSection() {
             </ul>
           </div>
 
-          {/* 2. KHỐI BANNER CHÍNH DUY NHẤT (75% màn hình) */}
-          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2.5 justify-between">
+          {/* 2. KHỐI BANNER CHÍNH KHÔNG CẮT BẤT KỲ NỘI DUNG NÀO (75% màn hình) */}
+          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2.5">
             
-            {/* Khung chứa Banner chính - hiển thị nguyên vẹn 100% */}
-            <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden relative shadow-sm h-[260px] sm:h-[300px] md:h-[320px]">
+            {/* Tỉ lệ aspect-[2.15/1] chuẩn tỉ lệ ảnh gốc thiết kế banner */}
+            <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden relative shadow-sm aspect-[2.15/1]">
               <img
                 src="/main-banner.jpg"
                 alt="Sắm Đồ Công Nghệ Không Lo Về Giá - Tĩnh Computer"
-                className="w-full h-full object-cover object-top transition-all duration-300"
+                className="w-full h-full object-contain object-center"
               />
             </div>
 
