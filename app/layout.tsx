@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import MobileBottomBar from "./components/MobileBottomBar";
+import MobileBottomBar from "@/app/components/MobileBottomBar";
 
 export const metadata: Metadata = {
   title: "Sửa Máy Tính Đà Nẵng & Lắp Đặt Camera - Tĩnh Computer",
