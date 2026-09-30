@@ -59,7 +59,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
       }
     }
 
-    // 3. Lọc sản phẩm phù hợp với Slug của trang (ví dụ: man-hinh-pc, laptop, camera-quan-sat)
+    // 3. Lọc sản phẩm phù hợp với Slug của trang
     const filtered = allProducts.filter((p) => {
       const prodCategorySlug = slugifyify(p.category);
       return prodCategorySlug.includes(currentSlug) || currentSlug.includes(prodCategorySlug);
@@ -81,7 +81,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
   }, [currentSlug]);
 
   return (
-    <div className="py-6 bg-gray-50 min-h-screen">
+    <div className="py-6 bg-gray-50 min-h-screen font-sans">
       <div className="container mx-auto px-2">
         <div className="mb-6 bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
           <h1 className="text-xl font-black text-red-600 uppercase">
@@ -95,9 +95,10 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
         {products.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
             {products.map((item) => (
-              <div
+              <Link
                 key={item.id}
-                className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between p-3"
+                href={`/product/${item.id}`}
+                className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between p-3 group cursor-pointer"
               >
                 <div>
                   <div className="w-full aspect-square overflow-hidden rounded bg-gray-100 mb-2 relative">
@@ -107,7 +108,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
                       className="w-full h-full object-cover object-center group-hover:scale-105 transition duration-300"
                     />
                   </div>
-                  <h3 className="text-xs font-semibold text-gray-800 line-clamp-2 min-h-[32px] mb-1">
+                  <h3 className="text-xs font-semibold text-gray-800 line-clamp-2 min-h-[32px] mb-1 group-hover:text-red-600 transition">
                     {item.name}
                   </h3>
                   <div className="flex items-baseline gap-2 mb-2">
@@ -120,11 +121,11 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
                   </div>
                 </div>
 
-                <button className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded text-xs transition flex items-center justify-center gap-1.5 shadow-sm">
+                <button className="w-full bg-red-600 group-hover:bg-red-700 text-white font-bold py-2 rounded text-xs transition flex items-center justify-center gap-1.5 shadow-sm">
                   <ShoppingCart className="w-3.5 h-3.5" />
-                  MUA NGAY
+                  XEM CHI TIẾT
                 </button>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (
