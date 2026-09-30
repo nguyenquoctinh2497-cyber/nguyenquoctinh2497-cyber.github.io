@@ -48,8 +48,23 @@ export default function AdminDashboard() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
-  // Load products from localStorage or initial list
-  useEffect(() => {
+  // Tải danh sách sản phẩm từ SQLite API & LocalStorage dự phòng
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("/api/products", { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setProducts(data);
+          localStorage.setItem("tinh_computer_products", JSON.stringify(data));
+          return;
+        }
+      }
+    } catch (e) {
+      console.error("Lỗi tải từ SQLite API:", e);
+    }
+
+    // Đọc dự phòng từ LocalStorage nếu chưa có API dữ liệu
     const saved = localStorage.getItem("tinh_computer_products");
     if (saved) {
       try {
@@ -93,6 +108,10 @@ export default function AdminDashboard() {
       setProducts(defaultProducts);
       localStorage.setItem("tinh_computer_products", JSON.stringify(defaultProducts));
     }
+  };
+
+  useEffect(() => {
+    fetchProducts();
   }, []);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +125,8 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleAddProduct = (e: React.FormEvent) => {
+  // Thêm sản phẩm mới đồng bộ cả SQLite API lẫn LocalStorage
+  const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !price) return;
 
@@ -121,9 +141,24 @@ export default function AdminDashboard() {
       inStock: true,
     };
 
+    // 1. Gửi dữ liệu lưu vào SQLite Database
+    try {
+      await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProduct),
+      });
+    } catch (err) {
+      console.error("Lỗi lưu API SQLite:", err);
+    }
+
+    // 2. Lưu đồng bộ LocalStorage
     const updated = [newProduct, ...products];
     setProducts(updated);
     localStorage.setItem("tinh_computer_products", JSON.stringify(updated));
+
+    // 3. Phát tín hiệu thời gian thực để trang chủ cập nhật tức thì
+    window.dispatchEvent(new Event("products_updated"));
 
     // Reset form
     setName("");
@@ -133,11 +168,21 @@ export default function AdminDashboard() {
     setShowAddForm(false);
   };
 
-  const handleDeleteProduct = (id: string) => {
+  // Xóa sản phẩm khỏi SQLite Database & LocalStorage
+  const handleDeleteProduct = async (id: string) => {
     if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này khỏi cơ sở dữ liệu?")) {
+      try {
+        await fetch(`/api/products?id=${id}`, { method: "DELETE" });
+      } catch (err) {
+        console.error("Lỗi xóa API SQLite:", err);
+      }
+
       const updated = products.filter((p) => p.id !== id);
       setProducts(updated);
       localStorage.setItem("tinh_computer_products", JSON.stringify(updated));
+
+      // Phát tín hiệu làm mới dữ liệu ngoài trang chủ
+      window.dispatchEvent(new Event("products_updated"));
     }
   };
 
@@ -309,7 +354,7 @@ export default function AdminDashboard() {
           {activeTab === "products" && (
             <div className="space-y-5">
               
-              {/* Form Thêm Sản Phẩm Mới (Hiện khi bấm nút Thêm) */}
+              {/* Form Thêm Sản Phẩm Mới */}
               {showAddForm && (
                 <div className="bg-slate-950 border border-red-900/50 p-5 rounded-xl shadow-xl space-y-4 animate-in fade-in duration-200">
                   <div className="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -377,7 +422,7 @@ export default function AdminDashboard() {
                         type="text"
                         value={brand}
                         onChange={(e) => setBrand(e.target.value)}
-                        placeholder="VD: ASUS, Dell, Imou, Gigabyte..."
+                        placeholder="VD: ASUS, Dell, Imou, AIWA, Gigabyte..."
                         className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-100 focus:outline-none focus:border-red-600"
                       />
                     </div>
