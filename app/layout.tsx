@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import MobileBottomBar from "./components/MobileBottomBar";
+import { CartProvider } from "./context/CartContext";
 
 export const metadata: Metadata = {
   title: "Sửa Máy Tính Đà Nẵng & Lắp Đặt Camera - Tĩnh Computer",
@@ -15,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body className="pb-14 md:pb-0">
-        {children}
-        <MobileBottomBar />
+        <CartProvider>
+          {children}
+          <MobileBottomBar />
+        </CartProvider>
       </body>
     </html>
   );
