@@ -20,7 +20,7 @@ import {
 
 export default function Header() {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const { totalItems } = useCart(); // Lấy số lượng giỏ hàng thực tế ở đây
+  const { totalItems } = useCart();
 
   const categories = [
     { name: "Laptop Mới", icon: Laptop, href: "/category/laptop-moi" },

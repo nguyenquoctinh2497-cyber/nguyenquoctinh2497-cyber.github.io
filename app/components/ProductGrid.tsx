@@ -74,7 +74,7 @@ export default function ProductGrid() {
                       image: product.image,
                     })
                   }
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded text-xs flex items-center justify-center gap-1.5 transition active:scale-95"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded text-xs flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer"
                 >
                   <ShoppingCart className="w-3.5 h-3.5" />
                   MUA NGAY
