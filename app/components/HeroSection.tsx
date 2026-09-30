@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Laptop,
@@ -10,11 +11,42 @@ import {
   Cpu,
   Watch,
   ChevronRight,
+  ChevronLeft,
   Percent,
   Wrench,
 } from "lucide-react";
 
 export default function HeroSection() {
+  // Danh sách các Banner luân phiên
+  const banners = [
+    {
+      src: "/main-banner.jpg",
+      alt: "Sắm Đồ Công Nghệ Không Lo Về Giá",
+    },
+    {
+      src: "/camera-banner.jpg",
+      alt: "Camera An Ninh Chính Hãng - Tĩnh Computer",
+    },
+  ];
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Tự động chuyển Banner sau mỗi 4 giây
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % banners.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [banners.length]);
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length);
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % banners.length);
+  };
+
   const sidebarCategories = [
     { name: "Hàng cũ Sale 50%", icon: Percent, href: "/category/hang-cu-sale", highlight: true },
     { name: "Laptop Mới / Cũ", icon: Laptop, href: "/category/laptop" },
@@ -58,15 +90,48 @@ export default function HeroSection() {
             </ul>
           </div>
 
-          {/* 2. KHỐI BANNER THIẾT KẾ MỚI TĨNH COMPUTER (75% màn hình) */}
+          {/* 2. KHỐI SLIDER BANNER LUÂN PHIÊN (75% màn hình) */}
           <div className="col-span-1 lg:col-span-9 flex flex-col gap-3 justify-between">
-            {/* Banner hiển thị trọn vẹn 100% không bị che xén chữ */}
-            <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden relative shadow-sm flex items-center justify-center min-h-[340px] md:min-h-[380px]">
+            
+            {/* Khung chứa Banner Slider */}
+            <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden relative shadow-sm group min-h-[340px] md:min-h-[380px] flex items-center justify-center">
+              {/* Ảnh Banner đang active */}
               <img
-                src="/main-banner.jpg"
-                alt="Sắm Đồ Công Nghệ Không Lo Về Giá - Tĩnh Computer"
-                className="w-full h-full object-contain object-center"
+                src={banners[currentSlide].src}
+                alt={banners[currentSlide].alt}
+                className="w-full h-full object-contain object-center transition-opacity duration-500"
               />
+
+              {/* Nút sang trái */}
+              <button
+                onClick={prevSlide}
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition duration-300"
+                title="Banner trước"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+
+              {/* Nút sang phải */}
+              <button
+                onClick={nextSlide}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition duration-300"
+                title="Banner tiếp theo"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+
+              {/* Dải chấm tròn chỉ số Slide góc dưới */}
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2">
+                {banners.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`h-2.5 rounded-full transition-all duration-300 ${
+                      currentSlide === index ? "w-7 bg-red-600" : "w-2.5 bg-gray-300/80 hover:bg-gray-400"
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
 
             {/* 4 Nút Dịch Vụ Nổi Nằm Dưới Banner */}
@@ -88,6 +153,7 @@ export default function HeroSection() {
                 <p className="text-xs font-black">UY TÍN TẠI ĐÀ NẴNG</p>
               </div>
             </div>
+
           </div>
 
         </div>
