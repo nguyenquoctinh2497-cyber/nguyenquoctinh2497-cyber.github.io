@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import MobileBottomBar from "./components/MobileBottomBar";
+import FloatingContact from "./components/FloatingContact";
 import { CartProvider } from "./context/CartContext";
 
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ export default function RootLayout({
       <body className="pb-14 md:pb-0">
         <CartProvider>
           {children}
+          <FloatingContact />
           <MobileBottomBar />
         </CartProvider>
       </body>
