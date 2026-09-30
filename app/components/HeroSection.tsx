@@ -58,13 +58,13 @@ export default function HeroSection() {
             </ul>
           </div>
 
-          {/* 2. KHỐI BANNER QUẢNG CÁO ƯU ĐÃI TO RÕ NÉT (75% màn hình) */}
+          {/* 2. KHỐI BANNER THIẾT KẾ MỚI TĨNH COMPUTER (75% màn hình) */}
           <div className="col-span-1 lg:col-span-9 flex flex-col gap-3">
-            {/* Banner Chính To Đẹp */}
-            <div className="w-full bg-gray-900 rounded-lg border border-gray-200 overflow-hidden relative shadow-sm h-[320px] md:h-[380px]">
+            {/* Khung chứa Banner chính chuẩn tỉ lệ ảnh */}
+            <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden relative shadow-sm aspect-[21/9] sm:aspect-[16/7] md:h-[350px]">
               <img
-                src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop"
-                alt="Banner Ưu Đãi Tĩnh Computer"
+                src="/main-banner.jpg"
+                alt="Sắm Đồ Công Nghệ Không Lo Về Giá - Tĩnh Computer"
                 className="w-full h-full object-cover object-center"
               />
             </div>
