@@ -17,28 +17,23 @@ import {
 } from "lucide-react";
 
 export default function HeroSection() {
-  // Danh sách 3 Banner kèm màu nền khớp với tông từng banner
   const banners = [
     {
       src: "/main-banner.jpg",
       alt: "Sắm Đồ Công Nghệ Không Lo Về Giá",
-      bgColor: "bg-white",
     },
     {
       src: "/vga-banner.jpg",
       alt: "VGA RTX 50 Series - Sức Mạnh AI",
-      bgColor: "bg-[#0d0304]", // Màu nền đỏ đen tối chuẩn tông RTX 50
     },
     {
       src: "/camera-banner.jpg",
       alt: "Camera An Ninh Chính Hãng",
-      bgColor: "bg-[#0a0a0c]", // Màu nền đen đỏ chuẩn tông Camera
     },
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Tự động xoay vòng banner mỗi 4 giây
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % banners.length);
@@ -73,7 +68,7 @@ export default function HeroSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
           
           {/* 1. DANH MỤC DỌC BÊN TRÁI (25% màn hình) */}
-          <div className="hidden lg:block lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden flex flex-col justify-between">
+          <div className="hidden lg:block lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden h-[380px]">
             <ul className="divide-y divide-gray-100 text-xs py-1 h-full flex flex-col justify-between">
               {sidebarCategories.map((item, idx) => {
                 const IconComp = item.icon;
@@ -81,7 +76,7 @@ export default function HeroSection() {
                   <li key={idx} className="flex-1 flex items-center">
                     <Link
                       href={item.href}
-                      className={`w-full flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-600 transition font-medium ${
+                      className={`w-full flex items-center justify-between px-3 py-1.5 hover:bg-red-50 hover:text-red-600 transition font-medium ${
                         item.highlight ? "text-red-600 font-bold" : "text-gray-700"
                       }`}
                     >
@@ -97,21 +92,21 @@ export default function HeroSection() {
             </ul>
           </div>
 
-          {/* 2. KHỐI SLIDER BANNER (75% màn hình) */}
-          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2 justify-between">
+          {/* 2. KHỐI SLIDER BANNER TRÀN VIỀN (75% màn hình) */}
+          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2 justify-between h-[380px]">
             
-            {/* Khung Slider đổi màu nền tự động khớp tông từng ảnh */}
-            <div className={`w-full ${banners[currentSlide].bgColor} rounded-lg border border-gray-200 overflow-hidden relative shadow-sm group aspect-[21/9] md:aspect-[16/7] max-h-[350px] transition-colors duration-500`}>
+            {/* Khung Slider vừa khít, kéo tràn 100% không còn dải đen/xám 2 bên */}
+            <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden relative shadow-sm group h-[320px]">
               <img
                 src={banners[currentSlide].src}
                 alt={banners[currentSlide].alt}
-                className="w-full h-full object-contain object-center transition-all duration-500"
+                className="w-full h-full object-cover object-top transition-all duration-500"
               />
 
               {/* Nút Prev / Next */}
               <button
                 onClick={prevSlide}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition duration-300 z-10"
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition duration-300 z-10"
                 title="Banner trước"
               >
                 <ChevronLeft className="w-5 h-5" />
@@ -119,20 +114,20 @@ export default function HeroSection() {
 
               <button
                 onClick={nextSlide}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition duration-300 z-10"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition duration-300 z-10"
                 title="Banner tiếp theo"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
 
-              {/* Dải chấm tròn đổi slide */}
+              {/* Chấm tròn chỉ số slide */}
               <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
                 {banners.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentSlide(index)}
                     className={`h-2.5 rounded-full transition-all duration-300 ${
-                      currentSlide === index ? "w-7 bg-red-600" : "w-2.5 bg-white/70 hover:bg-white"
+                      currentSlide === index ? "w-7 bg-red-600" : "w-2.5 bg-white/80 hover:bg-white"
                     }`}
                   />
                 ))}
@@ -140,22 +135,22 @@ export default function HeroSection() {
             </div>
 
             {/* 4 Nút Dịch Vụ Nổi Nằm Dưới Banner */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-2.5 rounded-lg text-center shadow-sm">
-                <p className="text-[10px] font-bold uppercase opacity-80 leading-none">ĐIỆN THOẠI CŨ</p>
-                <p className="text-xs font-black mt-1">CHỈ TỪ 1 TRIỆU</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 h-[52px]">
+              <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-2 rounded-lg text-center shadow-sm flex flex-col justify-center">
+                <p className="text-[9px] font-bold uppercase opacity-80 leading-none">ĐIỆN THOẠI CŨ</p>
+                <p className="text-xs font-black mt-0.5">CHỈ TỪ 1 TRIỆU</p>
               </div>
-              <div className="bg-gradient-to-r from-purple-700 to-indigo-800 text-white p-2.5 rounded-lg text-center shadow-sm">
-                <p className="text-[10px] font-bold uppercase opacity-80 leading-none">BUILD PC GAMING</p>
-                <p className="text-xs font-black mt-1">TRẢ GÓP 0Đ</p>
+              <div className="bg-gradient-to-r from-purple-700 to-indigo-800 text-white p-2 rounded-lg text-center shadow-sm flex flex-col justify-center">
+                <p className="text-[9px] font-bold uppercase opacity-80 leading-none">BUILD PC GAMING</p>
+                <p className="text-xs font-black mt-0.5">TRẢ GÓP 0Đ</p>
               </div>
-              <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-2.5 rounded-lg text-center shadow-sm">
-                <p className="text-[10px] font-bold uppercase opacity-80 leading-none">LAPTOP GIÁ RẺ</p>
-                <p className="text-xs font-black mt-1">GIÁ TỪ 5 TRIỆU</p>
+              <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-2 rounded-lg text-center shadow-sm flex flex-col justify-center">
+                <p className="text-[9px] font-bold uppercase opacity-80 leading-none">LAPTOP GIÁ RẺ</p>
+                <p className="text-xs font-black mt-0.5">GIÁ TỪ 5 TRIỆU</p>
               </div>
-              <div className="bg-gradient-to-r from-red-600 to-orange-600 text-white p-2.5 rounded-lg text-center shadow-sm">
-                <p className="text-[10px] font-bold uppercase opacity-80 leading-none">SỬA CHỮA TẬN NƠI</p>
-                <p className="text-xs font-black mt-1">UY TÍN TẠI ĐÀ NẴNG</p>
+              <div className="bg-gradient-to-r from-red-600 to-orange-600 text-white p-2 rounded-lg text-center shadow-sm flex flex-col justify-center">
+                <p className="text-[9px] font-bold uppercase opacity-80 leading-none">SỬA CHỮA TẬN NƠI</p>
+                <p className="text-xs font-black mt-0.5">UY TÍN TẠI ĐÀ NẴNG</p>
               </div>
             </div>
 
