@@ -113,7 +113,7 @@ export default function HeroSection() {
               { name: "Màn hình MSI", href: "/category/man-hinh-pc" },
               { name: "Màn hình Philips", href: "/category/man-hinh-pc" },
               { name: "Màn hình VSP", href: "/category/man-hinh-pc" },
-              { name: "Màn hình E-Dra", href: "/category/man-hinh-pc" },
+              { name: "Màn hình E-dra", href: "/category/man-hinh-pc" },
               { name: "Màn hình Dahua", href: "/category/man-hinh-pc" },
               { name: "Màn hình Aiwa", href: "/category/man-hinh-pc" },
             ],
@@ -123,7 +123,6 @@ export default function HeroSection() {
             items: [
               { name: "Giá treo màn hình PC", href: "/category/man-hinh-pc" },
               { name: "Cáp HDMI / DisplayPort", href: "/category/man-hinh-pc" },
-              { name: "Keo vệ sinh màn hình", href: "/category/man-hinh-pc" },
             ],
           },
         ],
@@ -157,11 +156,11 @@ export default function HeroSection() {
   return (
     <section className="py-3 bg-gray-100 font-sans">
       <div className="container mx-auto px-2">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start relative">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start relative z-20">
           
-          {/* 1. DANH MỤC DỌC BÊN TRÁI VỚI MEGA MENU HOVER */}
+          {/* 1. DANH MỤC DỌC BÊN TRÁI (Hiển thị Flyout Mega Menu đè nổi) */}
           <div
-            className="hidden lg:block lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-sm relative z-30"
+            className="hidden lg:block lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-sm relative z-40"
             onMouseLeave={() => setHoveredCategory(null)}
           >
             <ul className="divide-y divide-gray-100 text-xs py-1">
@@ -186,12 +185,12 @@ export default function HeroSection() {
                       <ChevronRight className="w-3.5 h-3.5 text-gray-400 shrink-0" />
                     </Link>
 
-                    {/* MEGA MENU FLYOUT BÊN PHẢI (Xuất hiện khi Hover vào Menu) */}
+                    {/* BẢNG MEGA MENU XỔ SANG PHẢI KHI HOVER */}
                     {hoveredCategory === idx && item.megaMenu && (
-                      <div className="absolute top-0 left-full ml-1.5 w-[520px] bg-white border border-gray-200 rounded-lg shadow-xl p-5 z-50 grid grid-cols-2 gap-6 min-h-[360px] animate-in fade-in duration-150">
+                      <div className="absolute top-0 left-full ml-1 w-[550px] bg-white border border-gray-200 rounded-lg shadow-2xl p-5 z-50 grid grid-cols-2 gap-6 min-h-[360px] animate-in fade-in duration-100">
                         {item.megaMenu.groups.map((group, gIdx) => (
                           <div key={gIdx} className="space-y-2">
-                            <h4 className="font-bold text-xs text-gray-900 border-b border-gray-200 pb-1.5 uppercase tracking-wide">
+                            <h4 className="font-bold text-xs text-red-600 border-b border-gray-200 pb-1.5 uppercase tracking-wide">
                               {group.title}
                             </h4>
                             <ul className="space-y-1 text-xs">
@@ -216,10 +215,8 @@ export default function HeroSection() {
             </ul>
           </div>
 
-          {/* 2. KHỐI BANNER CHÍNH BÊN PHẢI */}
-          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2.5">
-            
-            {/* Tỉ lệ aspect-[2.15/1] chuẩn tỉ lệ ảnh gốc thiết kế banner */}
+          {/* 2. BANNER CHÍNH BÊN PHẢI */}
+          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2.5 relative z-10">
             <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden relative shadow-sm aspect-[2.15/1]">
               <img
                 src="/main-banner.jpg"
@@ -228,7 +225,6 @@ export default function HeroSection() {
               />
             </div>
 
-            {/* 4 Nút Dịch Vụ Nổi Nằm Dưới Banner */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-2.5 rounded-lg text-center shadow-sm">
                 <p className="text-[10px] font-bold uppercase opacity-80 leading-none">ĐIỆN THOẠI CŨ</p>
@@ -247,7 +243,6 @@ export default function HeroSection() {
                 <p className="text-xs font-black mt-1">UY TÍN TẠI ĐÀ NẴNG</p>
               </div>
             </div>
-
           </div>
 
         </div>
