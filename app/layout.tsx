@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { CartProvider } from "./context/CartContext";
 
 export const metadata: Metadata = {
   title: {
@@ -64,12 +65,12 @@ export default function RootLayout({
       "addressLocality": "Đà Nẵng",
       "addressRegion": "Đà Nẵng",
       "postalCode": "550000",
-      "addressCountry": "VN"
+      "addressCountry": "VN",
     },
     "geo": {
       "@type": "GeoCoordinates",
       "latitude": 16.0544,
-      "longitude": 108.2022
+      "longitude": 108.2022,
     },
     "openingHoursSpecification": {
       "@type": "OpeningHoursSpecification",
@@ -80,16 +81,16 @@ export default function RootLayout({
         "Thursday",
         "Friday",
         "Saturday",
-        "Sunday"
+        "Sunday",
       ],
       "opens": "07:30",
-      "closes": "21:00"
+      "closes": "21:00",
     },
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "5.0",
-      "reviewCount": "128"
-    }
+      "reviewCount": "128",
+    },
   };
 
   return (
@@ -101,7 +102,9 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased bg-gray-100 font-sans text-gray-900">
-        {children}
+        <CartProvider>
+          {children}
+        </CartProvider>
       </body>
     </html>
   );
